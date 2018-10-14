@@ -1,5 +1,8 @@
 # imports
 import sys
+import Graphs
+import matplotlib.pyplot as plt 
+import time
 
 # def
 def getKey(item):

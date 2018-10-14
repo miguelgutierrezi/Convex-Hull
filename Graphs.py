@@ -21,7 +21,7 @@ class Point:
 # Gráfica rectangular
 # def
 def rectangularGraph (n, a, b, r):
-    pointCant = 0;
+    pointCant = 0
     points = []
 
     #while

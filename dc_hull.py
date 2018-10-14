@@ -1,5 +1,6 @@
 # imports
 import sys
+import Graphs
 
 # If
 if (len(sys.argv) < 6):
