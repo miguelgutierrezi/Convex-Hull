@@ -121,7 +121,7 @@ def printPoints (points):
 # If
 if (len(sys.argv) < 6):
     print("Faltan argumentos")
-    print("Modo de uso: python incremental_hull n t a b r")
+    print("Modo de uso: python jarvis_hull n t a b r")
 
 else:
     n = sys.argv[1]
@@ -145,9 +145,6 @@ else:
         print("Rectangulo")
     # endIf
 
-    """for i in range(len(pointsX)):
-        print ("(%s, %s)" %(str(pointsX[i]), str(pointsY[i])))"""
-
     start_time = time.time()
     hull = jarvis_Hull (pointsX, pointsY)
     print ("Jarvis Hull gasto %s segundos"%(time.time() - start_time))
@@ -163,7 +160,8 @@ else:
         x.append(p.x)
         y.append(p.y)
 
-    plt.scatter(pointsX, pointsY)
+    plt.scatter(pointsX, pointsY, facecolor="black")
+    plt.scatter(x, y, facecolor="green")
     plt.plot(x, y, color='g')
     plt.show()
 # endIf
