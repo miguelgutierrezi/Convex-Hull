@@ -1,19 +1,24 @@
 # imports
 import sys
 import Graphs
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
+import math
 import time
 
 # def
 def point_Op(p1, p2, p3):
-   x1 = p1.x - p2.x
-   x2 = p1.x - p3.y
-   y1 = p1.y - p2.y
-   y2 = p1.y - p3.y 
+    val = (p2.y - p1.y) * (p3.x - p2.x) - (p2.x - p1.x) * (p3.y - p2.y)
 
-   total = (y2 * x1) - (y1 * x2)
-
-   return total
+    # If
+    if val == 0:
+        return 0
+    
+    elif val > 0:
+        return 1
+    
+    else:
+        return 2
+    # endDef
 # endDef
 
 # def
@@ -44,8 +49,14 @@ def distance(p1, p2, p3):
 # endDef
 
 # def
+def points_Distance(p1, p2):
+    d = math.sqrt(((p2.x-p1.x)*(p2.x-p1.x)) + ((p2.y-p1.y)*(p2.y-p1.y)))
+    return d
+# endDef
+
+# def
 def getKey(item):
-    return item.x
+    return item.y
 # endDef
 
 # def
@@ -58,68 +69,47 @@ def jarvis_Hull (pointsX, pointsY):
         points.append(point)
     # endFor
 
-    print ("Ya terminaron los puntos")
+    # If
+    if len(points) < 3:
+        return
+    # endIf
 
-    """points = sorted(points, key = getKey)"""
+    hull = []
 
-    start = points[0] 
+    left = 0
 
     # for
     for i in range (1, len(points)):
         # If
-        if points[i].x < start.x:
-            start = points[i]
+        if points[i].x < points[left].x:
+            left = i
         # endIf
     # endFor
 
-    current = start
-    result = set()
-    result.add(start)
-
-    collinearPoints = []
+    start = left
 
     # while
     while True:
-        nextTarget = points[0]
-        # for
-        for i in range(1, len(points)):
-            # If
-            if points[i] == current:
-                continue
-            # endIf
-            val = point_Op(current, nextTarget, points[i])
-            # If
-            if val > 0:
-                nextTarget = points[i]
-                collinearPoints = []
+        hull.append(points[start])
 
-            elif val == 0:
-                # If
-                if distance(current, nextTarget, points[i]) < 0:
-                    collinearPoints.append(nextTarget)
-                    nextTarget = points[i]
-                
-                else:
-                    collinearPoints.append(points[i])
-                # endIf
+        q = (start + 1) % len(points)
+        # for
+        for i in range (len(points)):
+            # If
+            if (point_Op(points[start], points[i], points[q]) == 2):
+                q = i
             # endIf
         # endFor
-
-        # for
-        for p in collinearPoints:
-            result.add(p)
-        # endFor
-
+        start = q
+        
         # If
-        if nextTarget == start:
+        if (start == left):
             break
         # endIf
-
-        result.add(nextTarget)
-        current = nextTarget
     # endWhile
 
-    return result
+    return hull
+
 # endDef
 
 # def
@@ -160,10 +150,12 @@ else:
 
     start_time = time.time()
     hull = jarvis_Hull (pointsX, pointsY)
-    print ("Incremental Hull gasto %s segundos"%(time.time() - start_time))
+    print ("Jarvis Hull gasto %s segundos"%(time.time() - start_time))
 
     printPoints(hull)
 
+    hull.append(hull[0])
+    
     x = []
     y = []
 
@@ -172,6 +164,6 @@ else:
         y.append(p.y)
 
     plt.scatter(pointsX, pointsY)
-    plt.scatter(x, y, facecolor="green")
+    plt.plot(x, y, color='g')
     plt.show()
 # endIf
