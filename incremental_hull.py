@@ -5,9 +5,41 @@ import matplotlib.pyplot as plt
 import time
 
 # def
-def incremental_Hull (Points):
-    print ("Incremental Hull")
-    return Points
+def getKey(item):
+    return item.x
+# endDef
+
+# def
+def incremental_Hull (pointsX, pointsY):
+    points = []
+
+    for i in range(len(pointsX)):
+        point = Graphs.Point(pointsX[i], pointsY[i])
+        points.append(point)
+
+    points = sorted(points, key = getKey)
+
+
+
+    return pointsX
+# endDef
+
+# def
+def printPoints (points):
+    for i in points:
+        print("(%s, %s)"%(str(i.x), str(i.y)))
+# endDef
+
+# def
+def point_Op(p1, p2, p3):
+   x1 = p1.x - p2.x
+   x2 = p1.x - p3.y
+   y1 = p1.y - p2.y
+   y2 = p1.y - p3.y 
+
+   total = (y2 * x1) - (y1 * x2)
+
+   return total
 # endDef
 
 # If
@@ -29,17 +61,21 @@ else:
 
     # If
     if t == "e":
-        distribution = Graphs.ellipticalGraph(n, a, b, r)
+        (pointsX, pointsY) = Graphs.ellipticalGraph(n, a, b, r)
         print("Elipse")
-        print (distribution)
     
     elif t == "r":
-        distribution = Graphs.rectangularGraph(n, a, b, r)
+        (pointsX, pointsY) = Graphs.rectangularGraph(n, a, b, r)
         print("Rectangulo")
-        print(distribution)
     # endIf
 
+    """for i in range(len(pointsX)):
+        print ("(%s, %s)" %(str(pointsX[i]), str(pointsY[i])))"""
+
     start_time = time.time()
-    hull = incremental_Hull (distribution)
+    hull = incremental_Hull (pointsX, pointsY)
     print ("Incremental Hull gasto %s segundos"%(time.time() - start_time))
+
+    plt.plot(pointsX, pointsY)
+    plt.show()
 # endIf

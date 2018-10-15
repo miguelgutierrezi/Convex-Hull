@@ -2,19 +2,16 @@
 import random
 import math
 
-# Inicio clase para representar puntos
+# Inicio Clase Punto
+# Class
 class Point:
     # def
     def __init__ (self, x, y):
         self.x = x
         self.y = y
     # endDef
-
-    # def
-    def __str__ (self):
-        return "[%s, %s]"%(self.x, self.y)
-    # endDef
-#Fin clase punto
+# endClass
+# Fin Clase punto
 
 # Inicio de Graficación
 
@@ -22,7 +19,8 @@ class Point:
 # def
 def rectangularGraph (n, a, b, r):
     pointCant = 0
-    points = []
+    pointsX = []
+    pointsY = []
 
     #while
     while pointCant < n:
@@ -32,28 +30,26 @@ def rectangularGraph (n, a, b, r):
         rotY = (x*math.sin(r)) + (y*math.cos(r))
         rotX = (x*math.cos(r)) - (y*math.sin(r))
 
-        punto = Point(rotX, rotY)
+        pointsX.append(rotX)
+        pointsY.append(rotY)
 
-        points.append(punto)
-
-        pointCant = len(points)
+        pointCant = len(pointsX)
     # endWhile
 
-    return points
+    return (pointsX, pointsY)
 # endDef
 
 # Gráfica elíptica
 # def
 def ellipticalGraph (n, a, b, r):
     pointCant = 0
-    points = []
+    pointsX = []
+    pointsY = []
 
     # while
     while pointCant < n:
-        theta = 0
-
         value = random.random() / 4
-        thetaValue = math.atan(b/a * math.tan(2*3.14*value))
+        thetaValue = math.atan(b/a * math.tan(2*math.pi*value))
 
         secondValue = random.random()
 
@@ -62,10 +58,10 @@ def ellipticalGraph (n, a, b, r):
             theta = thetaValue
 
         elif secondValue < 0.5:
-            theta = 3.14 - thetaValue
+            theta = math.pi - thetaValue
 
         elif secondValue < 0.75:
-            theta = 3.14 + thetaValue
+            theta = math.pi + thetaValue
         
         else:
             theta = -thetaValue
@@ -73,16 +69,15 @@ def ellipticalGraph (n, a, b, r):
         radius = a*b / math.sqrt((b*math.cos(theta))**2 + (a*math.sin(theta))**2)
         rradius = radius * math.sqrt(random.random())
 
-        x = rradius * math.cos(r)
-        y = rradius * math.sin(r)
+        x = rradius * math.cos(theta)
+        y = rradius * math.sin(theta)
 
         rotY = (x * math.sin(r)) + (y * math.cos(r))
         rotX = (x * math.cos(r)) - (y * math.sin(r))
 
-        point = Point(rotX, rotY)
-
-        points.append(point)
-        pointCant = len(points)
+        pointsX.append(rotX)
+        pointsY.append(rotY)
+        pointCant = len(pointsX)
     # endWhile
-    return points
+    return (pointsX, pointsY)
 # endDef
