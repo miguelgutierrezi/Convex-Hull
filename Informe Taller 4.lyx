@@ -1,9 +1,7 @@
-#LyX 2.3 created this file. For more info see http://www.lyx.org/
-\lyxformat 544
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
 \begin_document
 \begin_header
-\save_transient_properties true
-\origin unavailable
 \textclass article
 \begin_preamble
 \usepackage{algorithm, algpseudocode}
@@ -22,10 +20,8 @@
 \use_non_tex_fonts false
 \font_sc false
 \font_osf false
-\font_sf_scale 100 100
-\font_tt_scale 100 100
-\use_microtype false
-\use_dash_ligatures true
+\font_sf_scale 100
+\font_tt_scale 100
 \graphics default
 \default_output_format default
 \output_sync 0
@@ -56,7 +52,6 @@
 \suppress_date false
 \justification true
 \use_refstyle 1
-\use_minted 0
 \index Index
 \shortcut idx
 \color #008000
@@ -69,10 +64,7 @@
 \tocdepth 3
 \paragraph_separation indent
 \paragraph_indentation default
-\is_math_indent 0
-\math_numbering_side default
-\quotes_style english
-\dynamic_quotes 0
+\quotes_language english
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
@@ -614,39 +606,21 @@ Invariante
 \end_layout
 
 \begin_layout Paragraph*
-Dado que es un algoritmo de Dynamic Programming, su invariante siempre será
- la misma, está consta de que, al realizar los cálculos y almacenarlos en
- una tabla con la información.
- Esto nos garantiza que, para realizar el cálculo del valor actual, ya se
- contará con los anteriores, por lo tanto se optimizará el tiempo de ejecución
- del código.
+La invariante es que se toman puntos mínimos por su coordenada en izquierda
+ o derecha que se encuentra dentro del casco.
 \end_layout
 
 \begin_layout Subsubsection
 Análisis de Complejidad
 \end_layout
 
-\begin_layout Subsubsection
-Análisis de resultados
-\end_layout
-
-\begin_layout Itemize
-En este caso particular, se obtiene una complejidad de 
+\begin_layout Paragraph
+La complejidad es 
 \begin_inset Formula $O(n^{2})$
 \end_inset
 
- tanto para el algoritmo de memoización como de Bottom-up.
- Sin embargo, por cuestión de optimización de recursos, es preferible el
- uso del código Bottom-up, puesto que, hace un menor uso de memoria, dado
- que su funcionamiento de basa en el uso de accesos a la tabla.
- Y, por lo tanto, se genera una mayor eficiencia en la ejecución del algoritmo.
-\end_layout
-
-\begin_layout Itemize
-Se verifica que el código realizado en Programación Dinámica es más eficiente
- que el código de fuerza bruta y memoizado.
- Esto se comprueba a partir de las pruebas realizadas y la obtención de
- mejores tiempos y resultados en la ejecución del código.
+ dado que es necesario recorrer todos los puntos existentes, y, a su vez
+ se requiere verificar que elementos deben eliminarse o añadirse al casco.
 \end_layout
 
 \begin_layout Subsection
@@ -1483,40 +1457,26 @@ end{algorithmic}
 Invariante
 \end_layout
 
-\begin_layout Paragraph*
-Dado que es un algoritmo de Dynamic Programming, su invariante siempre será
- la misma, está consta de que, al realizar los cálculos y almacenarlos en
- una tabla con la información.
- Esto nos garantiza que, para realizar el cálculo del valor actual, ya se
- contará con los anteriores, por lo tanto se optimizará el tiempo de ejecución
- del código.
+\begin_layout Paragraph
+Se garantiza que 
 \end_layout
 
 \begin_layout Subsubsection
 Análisis de Complejidad
 \end_layout
 
-\begin_layout Subsubsection
-Análisis de resultados
-\end_layout
-
-\begin_layout Itemize
-En este caso particular, se obtiene una complejidad de 
-\begin_inset Formula $O(n^{2})$
+\begin_layout Paragraph
+La complejidad del algoritmo de dividir y vencer es de 
+\begin_inset Formula $O(n\log n)$
 \end_inset
 
- tanto para el algoritmo de memoización como de Bottom-up.
- Sin embargo, por cuestión de optimización de recursos, es preferible el
- uso del código Bottom-up, puesto que, hace un menor uso de memoria, dado
- que su funcionamiento de basa en el uso de accesos a la tabla.
- Y, por lo tanto, se genera una mayor eficiencia en la ejecución del algoritmo.
-\end_layout
+ debido a que se requiere un tiempo 
+\begin_inset Formula $O(n)$
+\end_inset
 
-\begin_layout Itemize
-Se verifica que el código realizado en Programación Dinámica es más eficiente
- que el código de fuerza bruta y memoizado.
- Esto se comprueba a partir de las pruebas realizadas y la obtención de
- mejores tiempos y resultados en la ejecución del código.
+ para realizar el merge de los cascos hallados por izquierda y derecha.
+ Además, se debe tener en cuenta lo que se requiere para realizar la división
+ del conjunto de puntos inicial.
 \end_layout
 
 \begin_layout Subsection
@@ -1911,7 +1871,7 @@ Dado que es un algoritmo de Dynamic Programming, su invariante siempre será
 Análisis de Complejidad
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Section
 Análisis de resultados
 \end_layout
 
