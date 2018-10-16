@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import math
 import time
 
+#-------------------------------------------------------------------------------------------------------------
 # def
 def point_Op(p1, p2, p3):
     val = (p2.y - p1.y) * (p3.x - p2.x) - (p2.x - p1.x) * (p3.y - p2.y)
@@ -21,54 +22,9 @@ def point_Op(p1, p2, p3):
     # endDef
 # endDef
 
+#-------------------------------------------------------------------------------------------------------------
 # def
-def compare (x1, x2, y1, y2):
-    a = (y1*y1) + (x1*x1)
-    b = (y2*y2) + (x2*x2)
-
-    # If
-    if a == b:
-        return 0
-    
-    elif a < b:
-        return -1
-    
-    else:
-        return 1
-    # endIf
-# endDef
-
-# def
-def distance(p1, p2, p3):
-    x1 = p1.x - p2.x
-    x2 = p1.x - p3.x
-    y1 = p1.y - p2.y
-    y2 = p1.y - p3.y
-
-    return compare(x1, x2, y1, y2)
-# endDef
-
-# def
-def points_Distance(p1, p2):
-    d = math.sqrt(((p2.x-p1.x)*(p2.x-p1.x)) + ((p2.y-p1.y)*(p2.y-p1.y)))
-    return d
-# endDef
-
-# def
-def getKey(item):
-    return item.y
-# endDef
-
-# def
-def jarvis_Hull (pointsX, pointsY):
-    points = []
-
-    # for
-    for i in range(len(pointsX)):
-        point = Graphs.Point(pointsX[i], pointsY[i])
-        points.append(point)
-    # endFor
-
+def jarvis_Hull (points):
     # If
     if len(points) < 3:
         return
@@ -112,12 +68,14 @@ def jarvis_Hull (pointsX, pointsY):
 
 # endDef
 
+#-------------------------------------------------------------------------------------------------------------
 # def
 def printPoints (points):
     for i in points:
         print("(%s, %s)"%(str(i.x), str(i.y)))
 # endDef
 
+#-------------------------------------------------------------------------------------------------------------
 # If
 if (len(sys.argv) < 6):
     print("Faltan argumentos")
@@ -145,8 +103,16 @@ else:
         print("Rectangulo")
     # endIf
 
+    points = []
+
+    # for
+    for i in range(len(pointsX)):
+        point = Graphs.Point(pointsX[i], pointsY[i])
+        points.append(point)
+    # endFor
+
     start_time = time.time()
-    hull = jarvis_Hull (pointsX, pointsY)
+    hull = jarvis_Hull (points)
     print ("Jarvis Hull gasto %s segundos"%(time.time() - start_time))
 
     printPoints(hull)

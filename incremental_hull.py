@@ -1,51 +1,80 @@
 # imports
 import sys
 import Graphs
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
+import math
 import time
 
+#-------------------------------------------------------------------------------------------------------------
+# def
+def points_rightTurn(p1, p2, p3):
+    y1 = p1.y - p2.y
+    y2 = p1.y - p3.y
+    x1 = p1.x - p2.x
+    x2 = p1.x - p3.x
+
+    total = y2 * x1 - y1 * x2
+
+    return total
+# endDef
+
+#-------------------------------------------------------------------------------------------------------------
 # def
 def getKey(item):
-    return item.x
+    return item.y
 # endDef
 
+#-------------------------------------------------------------------------------------------------------------
 # def
-def incremental_Hull (pointsX, pointsY):
-    points = []
-
-    for i in range(len(pointsX)):
-        point = Graphs.Point(pointsX[i], pointsY[i])
-        points.append(point)
-
+def incremental_Hull (points):
     points = sorted(points, key = getKey)
 
+    Lupper = []
+    Lupper.append(points[0])
+    Lupper.append(points[1])
 
+    # for
+    for i in range (2, len(points)):
+        Lupper.append(points[i])
+        # while
+        while len(Lupper) > 2 and points_rightTurn(Lupper[len(Lupper)-3], Lupper[len(Lupper)-2], Lupper[len(Lupper)-1]) >= 0:
+           Lupper.pop(len(Lupper)-2)
+        # endWhile
+    # endFor
 
-    return pointsX
+    Llower = []
+    Llower.append(points[len(points)-1])
+    Llower.append(points[len(points)-2])
+
+    # for
+    for i in range (len(points) - 3, -1, -1):
+        Llower.append(points[i])
+        # while
+        while len(Llower) > 2 and points_rightTurn(Llower[len(Llower)-3], Llower[len(Llower)-2], Llower[len(Llower)-1]) >= 0:
+           Llower.pop(len(Llower)-2)
+        # endWhile
+    # endFor
+
+    Llower.pop(0)
+    Llower.pop(len(Llower) - 1)
+
+    hull = Llower + Lupper
+    
+    return hull
 # endDef
 
+#-------------------------------------------------------------------------------------------------------------
 # def
 def printPoints (points):
     for i in points:
         print("(%s, %s)"%(str(i.x), str(i.y)))
 # endDef
 
-# def
-def point_Op(p1, p2, p3):
-   x1 = p1.x - p2.x
-   x2 = p1.x - p3.y
-   y1 = p1.y - p2.y
-   y2 = p1.y - p3.y 
-
-   total = (y2 * x1) - (y1 * x2)
-
-   return total
-# endDef
-
+#-------------------------------------------------------------------------------------------------------------
 # If
 if (len(sys.argv) < 6):
     print("Faltan argumentos")
-    print("Modo de uso: python incremental_hull n t a b r")
+    print("Modo de uso: python dc_hull n t a b r")
 
 else:
     n = sys.argv[1]
@@ -69,13 +98,31 @@ else:
         print("Rectangulo")
     # endIf
 
-    """for i in range(len(pointsX)):
-        print ("(%s, %s)" %(str(pointsX[i]), str(pointsY[i])))"""
+    points = []
+
+    # for
+    for i in range(len(pointsX)):
+        point = Graphs.Point(pointsX[i], pointsY[i])
+        points.append(point)
+    # endFor
 
     start_time = time.time()
-    hull = incremental_Hull (pointsX, pointsY)
+    hull = incremental_Hull (points)
     print ("Incremental Hull gasto %s segundos"%(time.time() - start_time))
 
-    plt.plot(pointsX, pointsY)
+    printPoints(hull)
+
+    hull.append(hull[0])
+    
+    x = []
+    y = []
+
+    for p in hull:
+        x.append(p.x)
+        y.append(p.y)
+
+    plt.scatter(pointsX, pointsY, facecolor="black")
+    plt.scatter(x, y, facecolor="green")
+    plt.plot(x, y, color='g')
     plt.show()
 # endIf
