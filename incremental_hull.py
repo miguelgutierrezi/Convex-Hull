@@ -1,4 +1,4 @@
-#!/usr/bin/python
+{j $\leftarrow 1 $\textbf(to)$ $size-i\#!/usr/bin/python
 
 ##################################################
 #         Taller 4: Algoritmo Incremental        #
@@ -18,10 +18,10 @@ import time
 #-------------------------------------------------------------------------------------------------------------
 # def
 def points_rightTurn(p1, p2, p3):
-    y1 = p1.y - p2.y
-    y2 = p1.y - p3.y
     x1 = p1.x - p2.x
     x2 = p1.x - p3.x
+    y1 = p1.y - p2.y
+    y2 = p1.y - p3.y
 
     total = y2 * x1 - y1 * x2
 

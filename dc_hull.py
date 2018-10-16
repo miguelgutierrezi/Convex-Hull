@@ -11,7 +11,7 @@
 # imports
 import sys
 import Graphs
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import math
 import time
 
@@ -40,7 +40,7 @@ def farthest_Point(s, e, points):
     # for
     for p in points:
 		# If
-        if point != s and point != e:
+        if p != s and p != e:
             dist = distance(s, e, p)
 			# If
             if dist > maximum:
@@ -207,8 +207,8 @@ else:
         x.append(p.x)
         y.append(p.y)
 
-    plt.scatter(pointsX, pointsY, facecolor="black")
+"""    plt.scatter(pointsX, pointsY, facecolor="black")
     plt.scatter(x, y, facecolor="green")
     plt.plot(x, y, color='g')
-    plt.show()
+    plt.show()"""
 # endIf

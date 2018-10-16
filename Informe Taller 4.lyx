@@ -14,10 +14,10 @@
 \language_package default
 \inputencoding auto
 \fontencoding global
-\font_roman "" "default""
-\font_sans "" "default""
-\font_typewriter "" "default""
-\font_math "" "auto""
+\font_roman "" "default"
+\font_sans "" "default"
+\font_typewriter "" "default"
+\font_math "" "auto"
 \font_default_family default
 \use_non_tex_fonts false
 \font_sc false
@@ -31,11 +31,12 @@
 \output_sync 0
 \bibtex_command default
 \index_command default
+\float_placement tbh
 \paperfontsize default
 \spacing single
 \use_hyperref false
 \papersize default
-\use_geometry false
+\use_geometry true
 \use_package amsmath 1
 \use_package amssymb 1
 \use_package cancel 1
@@ -60,6 +61,10 @@
 \shortcut idx
 \color #008000
 \end_index
+\leftmargin 1cm
+\topmargin 1.5cm
+\rightmargin 1cm
+\bottommargin 1.5cm
 \secnumdepth 3
 \tocdepth 3
 \paragraph_separation indent
@@ -249,49 +254,33 @@ Observaciones
 
 \begin_layout Itemize
 Cuando 
-\begin_inset Formula $i=j$
+\begin_inset Formula $n<3$
 \end_inset
 
- significa que podemos estar sobre una secuencia vacía, por ende, la longitud
- de la subsecuencia retornada será 0.
- Esto nos servirá para determinar el caso base del algoritmo a implementar.
+ implica que no existe ningún casco convexo, esto debido a que no hay puntos
+ suficientes que permitan generar un polígono que cumpla con las condiciones
+ de un caso convexo.
 \end_layout
 
 \begin_layout Itemize
 Cuando 
-\begin_inset Formula $j>i$
+\begin_inset Formula $n\geq3$
 \end_inset
 
- implica que tenemos una secuencia con al menos un elemento.
- De esta manera entramos a buscar la subsecuencia de tamaño más grande.
- Esto para que nos permita cumplir con el objetivo de optimizar el tamaño
- máximo de la subcadena creciente más larga (LIS).
+ existe un casco convexo y puede hallarse utilizando cualquiera de los algoritmo
+s mencionados previamente.
 \end_layout
 
-\begin_layout Subsection
-Definición matemática
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula $X[i,j]\begin{cases}
-0 & i=j\\
-max(X[j])+1 & j>i
-\end{cases}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
+\begin_layout Section
 Escritura del algoritmo
+\end_layout
+
+\begin_layout Subsection
+Algoritmo Incremental
 \end_layout
 
 \begin_layout Subsubsection
 Pseudocódigo
-\end_layout
-
-\begin_layout Standard
-- Pseudocódigo recurrente (Algoritmo inocente)
 \end_layout
 
 \begin_layout Standard
@@ -304,7 +293,7 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Longest Increasing Subsequence BF
+Incremental Hull
 \end_layout
 
 \end_inset
@@ -327,14 +316,52 @@ begin{algorithmic}[1]
 
 
 \backslash
-Procedure{LISRAux}{S, i, j}
+Procedure{pointsRightTurn}{p1, p2, p3}
 \end_layout
 
 \begin_layout Plain Layout
 
 
 \backslash
-If {j $==$ |S|}
+State x1 $
+\backslash
+leftarrow$ p1.x $-$ p2.x
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State x2 $
+\backslash
+leftarrow$ p1.x $-$ p3.x
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State y1 $
+\backslash
+leftarrow$ p1.y $-$ p2.y
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State y2 $
+\backslash
+leftarrow$ p1.y $-$ p3.y
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State total $
+\backslash
+leftarrow$ y2 $*$ x1 $-$ y1 $*$ x2
 \end_layout
 
 \begin_layout Plain Layout
@@ -343,7 +370,809 @@ If {j $==$ |S|}
 \backslash
 State 
 \backslash
-textbf{return} ($0$)
+textbf{return} total
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndProcedure
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{algorithmic}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{algorithmic}[1]
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+Procedure{incrementalHull}{Points}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State Points $
+\backslash
+leftarrow$ sortByXAxis(Points)
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State Lupper = []
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State Lupper.append(Points[1])
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State Lupper.append(Points[2])
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+For {i $
+\backslash
+leftarrow 3$ $
+\backslash
+textbf(to)$ $|$Points$|$}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State Lupper.append(Points[i])
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+While {|Lupper|$>$2 and pointsRightTurn(Lupper[|Lupper|-2],Lupper[|Lupper|-1],Lu
+pper[|Lupper|])}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State Lupper.pop(|Lupper|-1)
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndWhile
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndFor
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State Llower = []
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State Llower.append(|Points|)
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State Llower.append(|Points|-1)
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+For {i $
+\backslash
+leftarrow |Points|$ $downto$ 1}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State Llower.append(Points[i])
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+While {|Llower|$>$2 and pointsRightTurn(Llower[|Llower|-2],Llower[|Llower|-1],Ll
+ower[|Llower|])}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State Llower.pop(|Llower|-1)
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndWhile
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndFor
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State Llower.pop(0)
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State Llower.pop(|Llower|)
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State hull $
+\backslash
+leftarrow$ Llower $+$ Lupper
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State 
+\backslash
+textbf{return} hull
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndProcedure
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{algorithmic}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Invariante
+\end_layout
+
+\begin_layout Paragraph*
+Dado que es un algoritmo de Dynamic Programming, su invariante siempre será
+ la misma, está consta de que, al realizar los cálculos y almacenarlos en
+ una tabla con la información.
+ Esto nos garantiza que, para realizar el cálculo del valor actual, ya se
+ contará con los anteriores, por lo tanto se optimizará el tiempo de ejecución
+ del código.
+\end_layout
+
+\begin_layout Subsubsection
+Análisis de Complejidad
+\end_layout
+
+\begin_layout Subsubsection
+Análisis de resultados
+\end_layout
+
+\begin_layout Itemize
+En este caso particular, se obtiene una complejidad de 
+\begin_inset Formula $O(n^{2})$
+\end_inset
+
+ tanto para el algoritmo de memoización como de Bottom-up.
+ Sin embargo, por cuestión de optimización de recursos, es preferible el
+ uso del código Bottom-up, puesto que, hace un menor uso de memoria, dado
+ que su funcionamiento de basa en el uso de accesos a la tabla.
+ Y, por lo tanto, se genera una mayor eficiencia en la ejecución del algoritmo.
+\end_layout
+
+\begin_layout Itemize
+Se verifica que el código realizado en Programación Dinámica es más eficiente
+ que el código de fuerza bruta y memoizado.
+ Esto se comprueba a partir de las pruebas realizadas y la obtención de
+ mejores tiempos y resultados en la ejecución del código.
+\end_layout
+
+\begin_layout Subsection
+Algoritmo Divide y Conquista
+\end_layout
+
+\begin_layout Subsubsection
+Pseudocódigo
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float algorithm
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+DC Hull
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{algorithmic}[1]
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+Procedure{DCHull}{Points}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State (minimum, maximum) $
+\backslash
+leftarrow$ extremePoints(Points)
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State hull $
+\backslash
+leftarrow$ subHull(minimum, maximum, points)
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State hull $
+\backslash
+leftarrow$ hull $+$ subHull(maximum, minimum, points)
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State 
+\backslash
+textbf{return} hull
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndProcedure
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{algorithmic}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{algorithmic}[1]
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+Procedure{subHull}{a, b, S}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State S $
+\backslash
+leftarrow$ leftPoints(a, b, S)
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State c $
+\backslash
+leftarrow$ farthestPoint(a, b, S)
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+If {c $==$ None}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State 
+\backslash
+textbf{return} [b]
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndIf
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State hull $
+\backslash
+leftarrow$ subHull(a, c, S)
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State hull $
+\backslash
+leftarrow$ hull $+$ subHull(c, b, S)
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State 
+\backslash
+textbf{return} hull
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndProcedure
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{algorithmic}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{algorithmic}[1]
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+Procedure{extremePoints}{points}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State minimum $
+\backslash
+leftarrow$ $
+\backslash
+infty$
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State maximum $
+\backslash
+leftarrow$ $-
+\backslash
+infty$
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State posMax $
+\backslash
+leftarrow$ 0
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State posMin $
+\backslash
+leftarrow$ 0
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+For {i $
+\backslash
+leftarrow 1$ $
+\backslash
+textbf(to)$ $|$Points$|$}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+If {points[i].y $>$ maximum}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State maximum $
+\backslash
+leftarrow$ points[i].y
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State posMax $
+\backslash
+leftarrow$ i
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndIf
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+If {points[i].y $<$ minimum}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State minimum $
+\backslash
+leftarrow$ points[i].y
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State posMin $
+\backslash
+leftarrow$ i
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndIf
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndFor
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State 
+\backslash
+textbf{return} (points[posMin], points[posMax])
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndProcedure
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{algorithmic}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{algorithmic}[1]
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+Procedure{leftPoints}{s, e, points}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State left $
+\backslash
+leftarrow$ []
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+For {i $
+\backslash
+leftarrow 1$ $
+\backslash
+textbf(to)$ $|$Points$|$}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+If {pointOp(s, e, points[i]) == 2}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State left.append(points[i])
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndIf
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndFor
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State 
+\backslash
+textbf{return} left
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndProcedure
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{algorithmic}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{algorithmic}[1]
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+Procedure{pointOp}{p1, p2, p3}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State val $
+\backslash
+leftarrow$ (p2.y $-$ p1.y) $*$ (p3.x $-$ p2.x) $-$ (p2.x $-$ p1.x) $*$ (p3.y $-$
+ p2.y)
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+If {val $==$ 0}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State 
+\backslash
+textbf{return} 0
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+ElsIf {val $>$ 0}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State 
+\backslash
+textbf{return} 1
 \end_layout
 
 \begin_layout Plain Layout
@@ -357,7 +1186,420 @@ Else
 
 
 \backslash
-State a $
+State 
+\backslash
+textbf{return} 2
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndIf
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndProcedure
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{algorithmic}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float algorithm
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Algoritmos de ayuda
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{algorithmic}[1]
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+Procedure{farthestPoint}{s, e, points}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State maximum $
+\backslash
+leftarrow$ $-
+\backslash
+infty$
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+For {i $
+\backslash
+leftarrow 1$ $
+\backslash
+textbf(to)$ $|$Points$|$}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+If {points[i] $!=$ s and points[i] $!=$ e}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State dist $
+\backslash
+leftarrow$ distance(s, e, points[i])
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+If {dist $>$ maximum}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State maximum $
+\backslash
+leftarrow$ dist
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State maxP $
+\backslash
+leftarrow$ points[i]
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndIf
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndIf
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndFor
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+If {maximum $!=$ $-
+\backslash
+infty$}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State 
+\backslash
+textbf{return} maxP
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+Else
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State 
+\backslash
+textbf{return} None
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndIf
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndProcedure
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{algorithmic}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{algorithmic}[1]
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+Procedure{distance}{start, end, point}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State nom $
+\backslash
+leftarrow$ abs((end.y $-$ start.y) $*$ point.x $-$ (end.x $-$ start.x) $*$ point.y
+ $+$ endx $*$ start.y $-$ end.y $*$ start.x)
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State denom $
+\backslash
+leftarrow$ ((end.y $-$ start.y) $**$ 2 $+$ (end.x $-$ start.x) $**$ 2) $**$
+ 0.5
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State result $
+\backslash
+leftarrow$ nom $/$ denom
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State 
+\backslash
+textbf{return} result
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndProcedure
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{algorithmic}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Invariante
+\end_layout
+
+\begin_layout Paragraph*
+Dado que es un algoritmo de Dynamic Programming, su invariante siempre será
+ la misma, está consta de que, al realizar los cálculos y almacenarlos en
+ una tabla con la información.
+ Esto nos garantiza que, para realizar el cálculo del valor actual, ya se
+ contará con los anteriores, por lo tanto se optimizará el tiempo de ejecución
+ del código.
+\end_layout
+
+\begin_layout Subsubsection
+Análisis de Complejidad
+\end_layout
+
+\begin_layout Subsubsection
+Análisis de resultados
+\end_layout
+
+\begin_layout Itemize
+En este caso particular, se obtiene una complejidad de 
+\begin_inset Formula $O(n^{2})$
+\end_inset
+
+ tanto para el algoritmo de memoización como de Bottom-up.
+ Sin embargo, por cuestión de optimización de recursos, es preferible el
+ uso del código Bottom-up, puesto que, hace un menor uso de memoria, dado
+ que su funcionamiento de basa en el uso de accesos a la tabla.
+ Y, por lo tanto, se genera una mayor eficiencia en la ejecución del algoritmo.
+\end_layout
+
+\begin_layout Itemize
+Se verifica que el código realizado en Programación Dinámica es más eficiente
+ que el código de fuerza bruta y memoizado.
+ Esto se comprueba a partir de las pruebas realizadas y la obtención de
+ mejores tiempos y resultados en la ejecución del código.
+\end_layout
+
+\begin_layout Subsection
+Algoritmo Jarvis - March
+\end_layout
+
+\begin_layout Subsubsection
+Pseudocódigo
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float algorithm
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Jarvis Hull
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{algorithmic}[1]
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+Procedure{jarvisHull}{Points}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+If {|Points| $<$ 3}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State 
+\backslash
+textbf{return}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndIf
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State hull $
+\backslash
+leftarrow$ []
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State left $
 \backslash
 leftarrow$ 0
 \end_layout
@@ -366,48 +1608,27 @@ leftarrow$ 0
 
 
 \backslash
-If {S[j] $>$ i}
+For {i $
+\backslash
+leftarrow 2$ $
+\backslash
+textbf(to)$ $|$Points$|$}
 \end_layout
 
 \begin_layout Plain Layout
 
 
 \backslash
-State a $
-\backslash
-leftarrow$ 1 $+$ LISRAux$($S, S[j], j $+$ 1$)$
+If {points[i].x $<$ points[left].x}
 \end_layout
 
 \begin_layout Plain Layout
 
 
 \backslash
-EndIf
-\end_layout
-
-\begin_layout Plain Layout
-
-
+State left $
 \backslash
-State b $
-\backslash
-leftarrow$ LISRAux$($S, i, j $+$ 1$)$
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-If {a $>$ b}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-State 
-\backslash
-textbf{return} a
+leftarrow$ i
 \end_layout
 
 \begin_layout Plain Layout
@@ -421,9 +1642,225 @@ EndIf
 
 
 \backslash
+EndFor
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State start $
+\backslash
+leftarrow$ left
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+While {true}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State hull.append(points[start])
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State q $
+\backslash
+leftarrow$ (start $+$ 1) 
+\backslash
+% |Points|
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+For {i $
+\backslash
+leftarrow 1$ $
+\backslash
+textbf(to)$ |Points|}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+If {pointOp(points[start], points[i], points[q]) $==$ 2}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State q $
+\backslash
+leftarrow$ i
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndIf
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndFor
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State start $
+\backslash
+leftarrow$ q
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+If {start $==$ left}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
 State 
 \backslash
-textbf{return} b
+textbf{break}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndIf
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndWhile
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State 
+\backslash
+textbf{return} hull
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndProcedure
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{algorithmic}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{algorithmic}[1]
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+Procedure{pointOp}{p1, p2, p3}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State val $
+\backslash
+leftarrow$ (p2.y $-$ p1.y) $*$ (p3.x $-$ p2.x) $-$ (p2.x $-$ p1.x) $*$ (p3.y $-$
+ p2.y)
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+If {val $==$ 0}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State 
+\backslash
+textbf{return} 0
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+ElsIf {val $>$ 0}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State 
+\backslash
+textbf{return} 1
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+Else
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State 
+\backslash
+textbf{return} 2
 \end_layout
 
 \begin_layout Plain Layout
@@ -470,56 +1907,11 @@ Dado que es un algoritmo de Dynamic Programming, su invariante siempre será
  del código.
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
 Análisis de Complejidad
 \end_layout
 
 \begin_layout Subsubsection
-Complejidad fuerza bruta
-\end_layout
-
-\begin_layout Paragraph
-La complejidad del código evidente, inocente, o, de fuerza bruta es de 
-\begin_inset Formula $O(2^{n})$
-\end_inset
-
-.
- Esto se debe a que al ejecutar el código, es necesario comprobar todas
- las subsecuencias de posible solución existente.
- Por ende, se da una complejidad de valor exponencial.
-\end_layout
-
-\begin_layout Subsubsection
-Complejidad memoización
-\end_layout
-
-\begin_layout Paragraph
-La complejidad del código de memoización es de 
-\begin_inset Formula $O(n^{2})$
-\end_inset
-
-.
- Esto se debe a que al ejecutar el código, se realizan dos recorridos, uno
- para la secuencia recibida, y otro para las subsecuencias, en el código
- de memoización se realizan asignaciones en la tabla de valores.
-\end_layout
-
-\begin_layout Subsubsection
-Complejidad Bottom-up
-\end_layout
-
-\begin_layout Paragraph
-La complejidad del código de memoización es de 
-\begin_inset Formula $O(n^{2})$
-\end_inset
-
-.
- Esto se debe a que al ejecutar el código, se realizan dos recorridos, uno
- para la secuencia recibida, y otro para las subsecuencias, en el código
- de Bottom-up se realizan accesos a la tabla de valores.
-\end_layout
-
-\begin_layout Subsection
 Análisis de resultados
 \end_layout
 
@@ -538,581 +1930,6 @@ En este caso particular, se obtiene una complejidad de
 \begin_layout Itemize
 Se verifica que el código realizado en Programación Dinámica es más eficiente
  que el código de fuerza bruta y memoizado.
- Esto se comprueba a partir de las pruebas realizadas y la obtención de
- mejores tiempos y resultados en la ejecución del código.
-\end_layout
-
-\begin_layout Section
-Edit Distance (ED)
-\end_layout
-
-\begin_layout Subsection
-Formalización del problema:
-\end_layout
-
-\begin_layout Paragraph*
-Dada dos secuencias 
-\begin_inset Formula $A$
-\end_inset
-
- y 
-\begin_inset Formula $B$
-\end_inset
-
- de n elementos diferentes.
- Se espera obtener la cantidad minima de operaciones 
-\begin_inset Formula $\ll insertar,eliminar,cambiar\gg$
-\end_inset
-
- que se hacen sobre las dos secuencias para que una de las dos sea igual
- a la otra.
-\end_layout
-
-\begin_layout Subsection
-Formalización del algoritmo:
-\end_layout
-
-\begin_layout Subsubsection
-Entradas:
-\end_layout
-
-\begin_layout Paragraph*
-Un par de secuencias 
-\begin_inset Formula $A$
-\end_inset
-
- y 
-\begin_inset Formula $B$
-\end_inset
-
- de n elementos distintos definida de la siguiente manera: 
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula $A=\left\langle s_{i}:i\in\left\{ 1..n\right\} \subset\mathbb{N}\right\rangle $
-\end_inset
-
-, 
-\begin_inset Formula $B=\left\langle s_{j}:j\in\left\{ 1..m\right\} \subset\mathbb{N}\right\rangle $
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsubsection
-Salidas:
-\end_layout
-
-\begin_layout Paragraph
-La cantidad mínima de operaciones 
-\begin_inset Formula $\ll insertar,eliminar,cambiar\gg$
-\end_inset
-
- que se hacen sobre las secuencias 
-\begin_inset Formula $A$
-\end_inset
-
- y 
-\begin_inset Formula $B$
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Subsection
-Definición matemática
-\end_layout
-
-\begin_layout Paragraph
-\begin_inset Formula $X[A,B]=\begin{cases}
-d_{i-1,j-1} & a_{j}=b_{i}\\
-min\begin{cases}
-d_{i-1,j}+Wdel(b_{i})\\
-d_{i,j-1}+Wins(a_{i})\\
-d_{i-1,j-1}+Wsub(a_{j},b_{i})
-\end{cases} & a_{j}\neq b_{i}
-\end{cases}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-Observaciones
-\end_layout
-
-\begin_layout Itemize
-Cuando 
-\begin_inset Formula $a_{i}=b_{j}$
-\end_inset
-
- significa que una de las dos secuencias puede ser vacía, por ende, la longitud
- de la subsecuencia retornada será la cardinalidad de la secuencia contraria.
- Esto nos servirá para determinar el caso base del algoritmo a implementar.
-\end_layout
-
-\begin_layout Itemize
-Cuando 
-\begin_inset Formula $a_{i}\neq b_{j}$
-\end_inset
-
- implica que las dos secuencias tienen al menos un elemento.
- De esta manera entramos a evaluar tres diferentes operaciones 
-\begin_inset Formula $\left(insertar,eliminar,cambiar\right)$
-\end_inset
-
- y se seleccionará aquella que realice el menor número de cambios entre
- secuencias.
-\end_layout
-
-\begin_layout Subsection
-Escritura del algoritmo
-\end_layout
-
-\begin_layout Subsubsection
-Pseudocódigo
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float algorithm
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-Algoritmo recurrente ED
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{algorithmic}[1]
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-Procedure{deBF}{S,P}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-If
-\end_layout
-
-\end_inset
-
-
-\begin_inset Formula $|S|==0$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-State 
-\backslash
-textbf{return} |P|
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-EndIf
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-If
-\end_layout
-
-\end_inset
-
-
-\begin_inset Formula $|P|==0$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-State 
-\backslash
-textbf{return} |S|
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-EndIf
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-If
-\end_layout
-
-\end_inset
-
-
-\begin_inset Formula $S[0]==P[0]$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-State
-\end_layout
-
-\end_inset
-
-
-\begin_inset Formula $d\leftarrow0$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-Else
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-State
-\end_layout
-
-\end_inset
-
-
-\begin_inset Formula $d\leftarrow1$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-EndIf
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-State
-\end_layout
-
-\end_inset
-
-
-\begin_inset Formula $a\leftarrow deBF(S[1:],P[1:])+d$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-State
-\end_layout
-
-\end_inset
-
-
-\begin_inset Formula $b\leftarrow deBF(S[1:],P)+1$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-State
-\end_layout
-
-\end_inset
-
-
-\begin_inset Formula $c\leftarrow deBF(S,P[1:])+1$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-State 
-\backslash
-textbf{return} min(a, b, c)
-\end_layout
-
-\end_inset
-
- 
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-EndProcedure
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{algorithmic}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsubsection
-Invariante
-\end_layout
-
-\begin_layout Paragraph*
-Dado que es un algoritmo de Dynamic Programming, su invariante siempre será
- la misma, está consta que, al realizar los cálculos y almacenarlos en una
- tabla con la información.
- Esto nos garantiza que, para realizar el cálculo del valor actual, ya se
- contará con los anteriores, por lo tanto se optimizará el tiempo de ejecución
- del código
-\end_layout
-
-\begin_layout Subsection
-Análisis de Complejidad
-\end_layout
-
-\begin_layout Subsubsection
-Complejidad de Fuerza bruta
-\end_layout
-
-\begin_layout Paragraph*
-La complejidad del código evidente, inocente, o, de fuerza bruta es de 
-\begin_inset Formula $O(2^{n})$
-\end_inset
-
-.
- Esto se debe a que al ejecutar el código, es necesario comprobar todas
- las subsecuencias de solución existente entre las dos secuencias.
-\end_layout
-
-\begin_layout Subsubsection
-Complejidad de Memoización
-\end_layout
-
-\begin_layout Paragraph
-La complejidad del código de memoización es de 
-\begin_inset Formula $O(n^{2})$
-\end_inset
-
-.
- Esto se debe a que al ejecutar el código, se realizan dos recorridos para
- comparar las posiciones de las secuencias recibidas, en el código de memoizació
-n se realizan asiganciones a la tabla.
-\end_layout
-
-\begin_layout Subsubsection
-Complejidad de Bottom-up
-\end_layout
-
-\begin_layout Paragraph
-La complejidad del código de bottom-up es de 
-\begin_inset Formula $O(n^{2})$
-\end_inset
-
-.
- Esto se debe a que al ejecutar el código, se realizan dos recorridos para
- comparar las posiciones de las secuencias recibidas, en el código de bottom-up
- se realizan accesos a la tabla.
-\end_layout
-
-\begin_layout Subsection
-Análisis de resultados
-\end_layout
-
-\begin_layout Itemize
-Dada la condición de la solución del problema, encontramos que no es necesario
- realizar un BackTracking a la misma, esto debido a que solo necesitamos
- la cantidad de operaciones necesarias para que una de la secuencias sea
- igual a la otra.
-\end_layout
-
-\begin_layout Itemize
-Se verifica que el código realizado en Programación Dinámica es más eficiente
- que el código de fuerza bruta.
  Esto se comprueba a partir de las pruebas realizadas y la obtención de
  mejores tiempos y resultados en la ejecución del código.
 \end_layout
