@@ -1,0 +1,1121 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{algorithm, algpseudocode}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "" "default""
+\font_sans "" "default""
+\font_typewriter "" "default""
+\font_math "" "auto""
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Taller 4: Geometría Computacional: Cascos Convexos
+\end_layout
+
+\begin_layout Author
+Miguel Ángel Gutiérrez Ibagué - Juan Sebastián Bastos Cruz
+\end_layout
+
+\begin_layout Abstract
+El siguiente documento contiene el desarrollo de los algoritmos para calcular
+ cascos convexos de manera diferente.
+ En primer lugar encontramos el algoritmo incremental, en segundo lugar
+ el algoritmo basado en la técnica de dividir y vencer, y, finalmente el
+ algoritmo conocido como Jarvis - March, o de Wrapping.
+\end_layout
+
+\begin_layout Section*
+Manual del usuario
+\end_layout
+
+\begin_layout Paragraph*
+A continuación se mostrarán los pasos para compilar los códigos de cascos
+ convexos:
+\end_layout
+
+\begin_layout Standard
+Inicialmente debemos hacer claridad en que los párametros usados por los
+ 3 algoritmos son los siguientes:
+\end_layout
+
+\begin_layout Standard
+- n: Cantidad de puntos a generar
+\end_layout
+
+\begin_layout Standard
+- t: Tipo de distribución, 'e' para una distribución elíptica, y 'r' para
+ una distribución rectangular.
+\end_layout
+
+\begin_layout Standard
+- a: En un rectángulo representa el tamaño, y en una elipse representa el
+ diámetro.
+\end_layout
+
+\begin_layout Standard
+- b: Representa la altura,
+\end_layout
+
+\begin_layout Standard
+- r: Representa el ángulo de inclinación.
+\end_layout
+
+\begin_layout Enumerate
+Para el algoritmo de metodología incremental se ejecutará de la siguiente
+ manera: python 
+\noun on
+incremental_hull.py n t a b r
+\end_layout
+
+\begin_layout Enumerate
+Para el algoritmo de metodología dividir y vencer se ejecutará de la siguiente
+ manera: python 
+\noun on
+dc_hull.py n t a b r
+\end_layout
+
+\begin_layout Enumerate
+Para el algoritmo de Jarvis - March se ejecutará de la siguiente manera:
+ python 
+\noun on
+jarvis_hull.py n t a b r
+\end_layout
+
+\begin_layout Section
+Formalización del problema
+\end_layout
+
+\begin_layout Paragraph*
+Dado un conjunto 
+\begin_inset Formula $\beta$
+\end_inset
+
+ de n puntos diferentes repartidos en una distribución elíptica o rectangular.
+ Se espera retornar el casco convexo más pequeño que pueda contener todos
+ los puntos contenidos en el conjunto 
+\begin_inset Formula $\beta$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Formalización del algoritmo:
+\end_layout
+
+\begin_layout Subsection
+Entradas:
+\end_layout
+
+\begin_layout Subparagraph*
+- Un conjunto 
+\begin_inset Formula $\beta$
+\end_inset
+
+ de n puntos distintos repartidos en una distribución elíptica o rectangular
+ definida de la siguiente manera: 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\beta=\left\langle \left(s_{i},s_{j}\right):i\in\left\{ 1..n\right\} \land j\in\left\{ 1..n\right\} \subset\mathbb{\mathbb{R}}\right\rangle $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subparagraph*
+- Un cáracter t que indica la distribución elíptica o rectangular que se
+ utilizará.
+ 
+\end_layout
+
+\begin_layout Subparagraph*
+- Un entero n que contiene la cantidad de puntos que se encontrarán dentro
+ la distribución.
+\end_layout
+
+\begin_layout Subparagraph*
+- Un entero a que indica el tamaño del rectángulo, o, el diámetro de la
+ elipse.
+\end_layout
+
+\begin_layout Subparagraph*
+- Un entero b que indica la altura de la distribución.
+\end_layout
+
+\begin_layout Subparagraph*
+- Un entero r que indica el grado de inclinación de la figura.
+\end_layout
+
+\begin_layout Subsection
+Salidas:
+\end_layout
+
+\begin_layout Paragraph
+El conjunto 
+\begin_inset Formula $\gamma$
+\end_inset
+
+ que representa el Casco Convexo más pequeño de m puntos diferentes que
+ contenga el conjunto 
+\begin_inset Formula $\beta$
+\end_inset
+
+ de puntos enunciado en las entradas.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\gamma=\left\langle \left(s_{i},s_{j}\right):i\in\left\{ 1..n\right\} \land j\in\left\{ 1..n\right\} \subset\mathbb{\mathbb{R}}\right\rangle |\beta\subseteq\gamma$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Observaciones
+\end_layout
+
+\begin_layout Itemize
+Cuando 
+\begin_inset Formula $i=j$
+\end_inset
+
+ significa que podemos estar sobre una secuencia vacía, por ende, la longitud
+ de la subsecuencia retornada será 0.
+ Esto nos servirá para determinar el caso base del algoritmo a implementar.
+\end_layout
+
+\begin_layout Itemize
+Cuando 
+\begin_inset Formula $j>i$
+\end_inset
+
+ implica que tenemos una secuencia con al menos un elemento.
+ De esta manera entramos a buscar la subsecuencia de tamaño más grande.
+ Esto para que nos permita cumplir con el objetivo de optimizar el tamaño
+ máximo de la subcadena creciente más larga (LIS).
+\end_layout
+
+\begin_layout Subsection
+Definición matemática
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $X[i,j]\begin{cases}
+0 & i=j\\
+max(X[j])+1 & j>i
+\end{cases}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Escritura del algoritmo
+\end_layout
+
+\begin_layout Subsubsection
+Pseudocódigo
+\end_layout
+
+\begin_layout Standard
+- Pseudocódigo recurrente (Algoritmo inocente)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float algorithm
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Longest Increasing Subsequence BF
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{algorithmic}[1]
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+Procedure{LISRAux}{S, i, j}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+If {j $==$ |S|}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State 
+\backslash
+textbf{return} ($0$)
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+Else
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State a $
+\backslash
+leftarrow$ 0
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+If {S[j] $>$ i}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State a $
+\backslash
+leftarrow$ 1 $+$ LISRAux$($S, S[j], j $+$ 1$)$
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndIf
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State b $
+\backslash
+leftarrow$ LISRAux$($S, i, j $+$ 1$)$
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+If {a $>$ b}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State 
+\backslash
+textbf{return} a
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndIf
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State 
+\backslash
+textbf{return} b
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndIf
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndProcedure
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{algorithmic}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Invariante
+\end_layout
+
+\begin_layout Paragraph*
+Dado que es un algoritmo de Dynamic Programming, su invariante siempre será
+ la misma, está consta de que, al realizar los cálculos y almacenarlos en
+ una tabla con la información.
+ Esto nos garantiza que, para realizar el cálculo del valor actual, ya se
+ contará con los anteriores, por lo tanto se optimizará el tiempo de ejecución
+ del código.
+\end_layout
+
+\begin_layout Subsection
+Análisis de Complejidad
+\end_layout
+
+\begin_layout Subsubsection
+Complejidad fuerza bruta
+\end_layout
+
+\begin_layout Paragraph
+La complejidad del código evidente, inocente, o, de fuerza bruta es de 
+\begin_inset Formula $O(2^{n})$
+\end_inset
+
+.
+ Esto se debe a que al ejecutar el código, es necesario comprobar todas
+ las subsecuencias de posible solución existente.
+ Por ende, se da una complejidad de valor exponencial.
+\end_layout
+
+\begin_layout Subsubsection
+Complejidad memoización
+\end_layout
+
+\begin_layout Paragraph
+La complejidad del código de memoización es de 
+\begin_inset Formula $O(n^{2})$
+\end_inset
+
+.
+ Esto se debe a que al ejecutar el código, se realizan dos recorridos, uno
+ para la secuencia recibida, y otro para las subsecuencias, en el código
+ de memoización se realizan asignaciones en la tabla de valores.
+\end_layout
+
+\begin_layout Subsubsection
+Complejidad Bottom-up
+\end_layout
+
+\begin_layout Paragraph
+La complejidad del código de memoización es de 
+\begin_inset Formula $O(n^{2})$
+\end_inset
+
+.
+ Esto se debe a que al ejecutar el código, se realizan dos recorridos, uno
+ para la secuencia recibida, y otro para las subsecuencias, en el código
+ de Bottom-up se realizan accesos a la tabla de valores.
+\end_layout
+
+\begin_layout Subsection
+Análisis de resultados
+\end_layout
+
+\begin_layout Itemize
+En este caso particular, se obtiene una complejidad de 
+\begin_inset Formula $O(n^{2})$
+\end_inset
+
+ tanto para el algoritmo de memoización como de Bottom-up.
+ Sin embargo, por cuestión de optimización de recursos, es preferible el
+ uso del código Bottom-up, puesto que, hace un menor uso de memoria, dado
+ que su funcionamiento de basa en el uso de accesos a la tabla.
+ Y, por lo tanto, se genera una mayor eficiencia en la ejecución del algoritmo.
+\end_layout
+
+\begin_layout Itemize
+Se verifica que el código realizado en Programación Dinámica es más eficiente
+ que el código de fuerza bruta y memoizado.
+ Esto se comprueba a partir de las pruebas realizadas y la obtención de
+ mejores tiempos y resultados en la ejecución del código.
+\end_layout
+
+\begin_layout Section
+Edit Distance (ED)
+\end_layout
+
+\begin_layout Subsection
+Formalización del problema:
+\end_layout
+
+\begin_layout Paragraph*
+Dada dos secuencias 
+\begin_inset Formula $A$
+\end_inset
+
+ y 
+\begin_inset Formula $B$
+\end_inset
+
+ de n elementos diferentes.
+ Se espera obtener la cantidad minima de operaciones 
+\begin_inset Formula $\ll insertar,eliminar,cambiar\gg$
+\end_inset
+
+ que se hacen sobre las dos secuencias para que una de las dos sea igual
+ a la otra.
+\end_layout
+
+\begin_layout Subsection
+Formalización del algoritmo:
+\end_layout
+
+\begin_layout Subsubsection
+Entradas:
+\end_layout
+
+\begin_layout Paragraph*
+Un par de secuencias 
+\begin_inset Formula $A$
+\end_inset
+
+ y 
+\begin_inset Formula $B$
+\end_inset
+
+ de n elementos distintos definida de la siguiente manera: 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $A=\left\langle s_{i}:i\in\left\{ 1..n\right\} \subset\mathbb{N}\right\rangle $
+\end_inset
+
+, 
+\begin_inset Formula $B=\left\langle s_{j}:j\in\left\{ 1..m\right\} \subset\mathbb{N}\right\rangle $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Salidas:
+\end_layout
+
+\begin_layout Paragraph
+La cantidad mínima de operaciones 
+\begin_inset Formula $\ll insertar,eliminar,cambiar\gg$
+\end_inset
+
+ que se hacen sobre las secuencias 
+\begin_inset Formula $A$
+\end_inset
+
+ y 
+\begin_inset Formula $B$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Definición matemática
+\end_layout
+
+\begin_layout Paragraph
+\begin_inset Formula $X[A,B]=\begin{cases}
+d_{i-1,j-1} & a_{j}=b_{i}\\
+min\begin{cases}
+d_{i-1,j}+Wdel(b_{i})\\
+d_{i,j-1}+Wins(a_{i})\\
+d_{i-1,j-1}+Wsub(a_{j},b_{i})
+\end{cases} & a_{j}\neq b_{i}
+\end{cases}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Observaciones
+\end_layout
+
+\begin_layout Itemize
+Cuando 
+\begin_inset Formula $a_{i}=b_{j}$
+\end_inset
+
+ significa que una de las dos secuencias puede ser vacía, por ende, la longitud
+ de la subsecuencia retornada será la cardinalidad de la secuencia contraria.
+ Esto nos servirá para determinar el caso base del algoritmo a implementar.
+\end_layout
+
+\begin_layout Itemize
+Cuando 
+\begin_inset Formula $a_{i}\neq b_{j}$
+\end_inset
+
+ implica que las dos secuencias tienen al menos un elemento.
+ De esta manera entramos a evaluar tres diferentes operaciones 
+\begin_inset Formula $\left(insertar,eliminar,cambiar\right)$
+\end_inset
+
+ y se seleccionará aquella que realice el menor número de cambios entre
+ secuencias.
+\end_layout
+
+\begin_layout Subsection
+Escritura del algoritmo
+\end_layout
+
+\begin_layout Subsubsection
+Pseudocódigo
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float algorithm
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Algoritmo recurrente ED
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{algorithmic}[1]
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+Procedure{deBF}{S,P}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+If
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula $|S|==0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+State 
+\backslash
+textbf{return} |P|
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndIf
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+If
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula $|P|==0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+State 
+\backslash
+textbf{return} |S|
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndIf
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+If
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula $S[0]==P[0]$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+State
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula $d\leftarrow0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+Else
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+State
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula $d\leftarrow1$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndIf
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+State
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula $a\leftarrow deBF(S[1:],P[1:])+d$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+State
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula $b\leftarrow deBF(S[1:],P)+1$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+State
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula $c\leftarrow deBF(S,P[1:])+1$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+State 
+\backslash
+textbf{return} min(a, b, c)
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndProcedure
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{algorithmic}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Invariante
+\end_layout
+
+\begin_layout Paragraph*
+Dado que es un algoritmo de Dynamic Programming, su invariante siempre será
+ la misma, está consta que, al realizar los cálculos y almacenarlos en una
+ tabla con la información.
+ Esto nos garantiza que, para realizar el cálculo del valor actual, ya se
+ contará con los anteriores, por lo tanto se optimizará el tiempo de ejecución
+ del código
+\end_layout
+
+\begin_layout Subsection
+Análisis de Complejidad
+\end_layout
+
+\begin_layout Subsubsection
+Complejidad de Fuerza bruta
+\end_layout
+
+\begin_layout Paragraph*
+La complejidad del código evidente, inocente, o, de fuerza bruta es de 
+\begin_inset Formula $O(2^{n})$
+\end_inset
+
+.
+ Esto se debe a que al ejecutar el código, es necesario comprobar todas
+ las subsecuencias de solución existente entre las dos secuencias.
+\end_layout
+
+\begin_layout Subsubsection
+Complejidad de Memoización
+\end_layout
+
+\begin_layout Paragraph
+La complejidad del código de memoización es de 
+\begin_inset Formula $O(n^{2})$
+\end_inset
+
+.
+ Esto se debe a que al ejecutar el código, se realizan dos recorridos para
+ comparar las posiciones de las secuencias recibidas, en el código de memoizació
+n se realizan asiganciones a la tabla.
+\end_layout
+
+\begin_layout Subsubsection
+Complejidad de Bottom-up
+\end_layout
+
+\begin_layout Paragraph
+La complejidad del código de bottom-up es de 
+\begin_inset Formula $O(n^{2})$
+\end_inset
+
+.
+ Esto se debe a que al ejecutar el código, se realizan dos recorridos para
+ comparar las posiciones de las secuencias recibidas, en el código de bottom-up
+ se realizan accesos a la tabla.
+\end_layout
+
+\begin_layout Subsection
+Análisis de resultados
+\end_layout
+
+\begin_layout Itemize
+Dada la condición de la solución del problema, encontramos que no es necesario
+ realizar un BackTracking a la misma, esto debido a que solo necesitamos
+ la cantidad de operaciones necesarias para que una de la secuencias sea
+ igual a la otra.
+\end_layout
+
+\begin_layout Itemize
+Se verifica que el código realizado en Programación Dinámica es más eficiente
+ que el código de fuerza bruta.
+ Esto se comprueba a partir de las pruebas realizadas y la obtención de
+ mejores tiempos y resultados en la ejecución del código.
+\end_layout
+
+\end_body
+\end_document
