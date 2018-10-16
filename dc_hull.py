@@ -1,3 +1,13 @@
+#!/usr/bin/python
+
+##################################################
+#     Taller 4: Algoritmo Divide and Conquer     #
+#              para Cascos Convexos              #
+# Miguel Ángel Gutiérrez - Juan Sebastián Bastos #
+# Análisis de Algoritmos                         #
+# Pontificia Universidad Javeriana               #
+##################################################
+
 # imports
 import sys
 import Graphs
@@ -55,19 +65,6 @@ def distance(start, end, point):
 	denom = ((end.y - start.y)**2 + (end.x - start.x) ** 2) ** 0.5
 	result = nom / denom
 	return result
-# endDef
-
-#-------------------------------------------------------------------------------------------------------------
-# def
-def points_Distance(p1, p2):
-    d = math.sqrt(((p2.x-p1.x)*(p2.x-p1.x)) + ((p2.y-p1.y)*(p2.y-p1.y)))
-    return d
-# endDef
-
-#-------------------------------------------------------------------------------------------------------------
-# def
-def getKey(item):
-    return item.y
 # endDef
 
 #-------------------------------------------------------------------------------------------------------------

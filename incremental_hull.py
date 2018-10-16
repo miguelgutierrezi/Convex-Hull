@@ -1,3 +1,13 @@
+#!/usr/bin/python
+
+##################################################
+#         Taller 4: Algoritmo Incremental        #
+#              para Cascos Convexos              #
+# Miguel Ángel Gutiérrez - Juan Sebastián Bastos #
+# Análisis de Algoritmos                         #
+# Pontificia Universidad Javeriana               #
+##################################################
+
 # imports
 import sys
 import Graphs
