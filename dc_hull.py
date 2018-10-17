@@ -11,9 +11,10 @@
 # imports
 import sys
 import Graphs
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import math
 import time
+import os
 
 #-------------------------------------------------------------------------------------------------------------
 # def
@@ -192,9 +193,12 @@ else:
         points.append(point)
     # endFor
 
+    file = open("salida_dc.txt", "w")
     start_time = time.time()
     hull = DC_Hull (points)
     print ("Divide and Conquer Hull gasto %s segundos"%(time.time() - start_time))
+    f.write("New file")
+    f.close()
 
     printPoints(hull)
 
@@ -207,8 +211,8 @@ else:
         x.append(p.x)
         y.append(p.y)
 
-"""    plt.scatter(pointsX, pointsY, facecolor="black")
+    plt.scatter(pointsX, pointsY, facecolor="black")
     plt.scatter(x, y, facecolor="green")
     plt.plot(x, y, color='g')
-    plt.show()"""
+    plt.show()
 # endIf

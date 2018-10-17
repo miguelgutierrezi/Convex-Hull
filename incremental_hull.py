@@ -1,4 +1,4 @@
-{j $\leftarrow 1 $\textbf(to)$ $size-i\#!/usr/bin/python
+#!/usr/bin/python
 
 ##################################################
 #         Taller 4: Algoritmo Incremental        #
