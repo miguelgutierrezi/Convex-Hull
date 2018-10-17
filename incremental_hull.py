@@ -11,7 +11,7 @@
 # imports
 import sys
 import Graphs
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import math
 import time
 
@@ -116,15 +116,23 @@ else:
         points.append(point)
     # endFor
 
+    file = open("salida_incremental.txt", "w")
+    for tam in range (100, 100000, 100):
+        start_time = time.time()
+        hull = incremental_Hull (points)
+        final_time = time.time() - start_time
+        file.write("%d %f\n"%(tam, final_time))
+    file.close()
+
     start_time = time.time()
     hull = incremental_Hull (points)
     print ("Incremental Hull gasto %s segundos"%(time.time() - start_time))
-
+    
     printPoints(hull)
 
     hull.append(hull[0])
     
-    x = []
+    """x = []
     y = []
 
     for p in hull:
@@ -134,5 +142,5 @@ else:
     plt.scatter(pointsX, pointsY, facecolor="black")
     plt.scatter(x, y, facecolor="green")
     plt.plot(x, y, color='g')
-    plt.show()
+    plt.show()"""
 # endIf

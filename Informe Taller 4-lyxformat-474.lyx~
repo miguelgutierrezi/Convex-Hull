@@ -1,9 +1,7 @@
-#LyX 2.3 created this file. For more info see http://www.lyx.org/
-\lyxformat 544
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
 \begin_document
 \begin_header
-\save_transient_properties true
-\origin unavailable
 \textclass article
 \begin_preamble
 \usepackage{algorithm, algpseudocode}
@@ -14,18 +12,16 @@
 \language_package default
 \inputencoding auto
 \fontencoding global
-\font_roman "" " "
-\font_sans "" " "
-\font_typewriter "" " "
-\font_math "" " "
+\font_roman "" "default"
+\font_sans "" "default"
+\font_typewriter "" "default"
+\font_math "" "auto"
 \font_default_family default
 \use_non_tex_fonts false
 \font_sc false
 \font_osf false
-\font_sf_scale 100 100
-\font_tt_scale 100 100
-\use_microtype false
-\use_dash_ligatures true
+\font_sf_scale 100
+\font_tt_scale 100
 \graphics default
 \default_output_format default
 \output_sync 0
@@ -56,7 +52,6 @@
 \suppress_date false
 \justification true
 \use_refstyle 1
-\use_minted 0
 \index Index
 \shortcut idx
 \color #008000
@@ -69,10 +64,7 @@
 \tocdepth 3
 \paragraph_separation indent
 \paragraph_indentation default
-\is_math_indent 0
-\math_numbering_side default
-\quotes_style english
-\dynamic_quotes 0
+\quotes_language english
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
@@ -1867,245 +1859,16 @@ Invariante
 \end_layout
 
 \begin_layout Paragraph*
-Para el ciclo que permite encontrar el casco convexo más pequeño, se garantiza
- que se temrinará en el momento en el que se vuelva al punto de inicio.
- Además, al recorrer todo el conjunto de puntos, se garantiza que ninguno
- quedará fuera del análisis para el casco.
+Dado que es un algoritmo de Dynamic Programming, su invariante siempre será
+ la misma, está consta de que, al realizar los cálculos y almacenarlos en
+ una tabla con la información.
+ Esto nos garantiza que, para realizar el cálculo del valor actual, ya se
+ contará con los anteriores, por lo tanto se optimizará el tiempo de ejecución
+ del código.
 \end_layout
 
 \begin_layout Subsubsection
 Análisis de Complejidad
-\end_layout
-
-\begin_layout Paragraph
-La complejidad de este algoritmo es 
-\begin_inset Formula $O(m*n)$
-\end_inset
-
- siendo m la cantidad de puntos del casco convexo, y, n la cantidad de puntos
- incial de la distribución.
- Por ende se necesita 
-\begin_inset Formula $O(m)$
-\end_inset
-
- para el recorrido del casco convexo, y, 
-\begin_inset Formula $O(n)$
-\end_inset
-
- para recorrer el conjunto de puntos.
-\end_layout
-
-\begin_layout Section
-Pruebas
-\end_layout
-
-\begin_layout Paragraph
-Se realizaron tres pruebas con cada algoritmo, a continuación se presentarán
- las gráficas generadas por cada uno de ellos.
-\end_layout
-
-\begin_layout Subsection
-Prueba 1.
- n = 100, a = 20, b = 10, r = 30
-\end_layout
-
-\begin_layout Subsubsection
-Algoritmo Incremental
-\end_layout
-
-\begin_layout Standard
-\begin_inset Graphics
-	filename Imagenes Pruebas Incremental Hull/Prueba N100TeA20B10R30.png
-	scale 50
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename Imagenes Pruebas Incremental Hull/Prueba N100TrA20B10R30.png
-	scale 50
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsubsection
-Algoritmo Divide y Conquista
-\end_layout
-
-\begin_layout Standard
-\begin_inset Graphics
-	filename Imagenes Pruebas DC Hull/Prueba N100TeA20B10R30.png
-	scale 50
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename Imagenes Pruebas DC Hull/Prueba N100TrA20B10R30.png
-	scale 50
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsubsection
-Algoritmo Jarvis - March
-\end_layout
-
-\begin_layout Standard
-\begin_inset Graphics
-	filename Imagenes Pruebas Jarvis Hull/Prueba N100TeA20B10R30.png
-	scale 50
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename Imagenes Pruebas Jarvis Hull/Prueba N100TrA20B10R30.png
-	scale 50
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-Prueba 1.
- n = 1000, a = 50, b = 40, r = 0
-\end_layout
-
-\begin_layout Subsubsection
-Algoritmo Incremental
-\end_layout
-
-\begin_layout Standard
-\begin_inset Graphics
-	filename Imagenes Pruebas Incremental Hull/Prueba N1000TeA50B40R0.png
-	scale 50
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename Imagenes Pruebas Incremental Hull/Prueba N1000TrA50B40R0.png
-	scale 50
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsubsection
-Algoritmo Divide y Conquista
-\end_layout
-
-\begin_layout Standard
-\begin_inset Graphics
-	filename Imagenes Pruebas DC Hull/Prueba N1000TeA50B40R0.png
-	scale 50
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename Imagenes Pruebas DC Hull/Prueba N1000TrA50B40R0.png
-	scale 50
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsubsection
-Algoritmo Jarvis - March
-\end_layout
-
-\begin_layout Standard
-\begin_inset Graphics
-	filename Imagenes Pruebas Jarvis Hull/Prueba N1000TeA50B40R0.png
-	scale 50
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename Imagenes Pruebas Jarvis Hull/Prueba N1000TrA50B40R0.png
-	scale 50
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-Prueba 1.
- n = 10000, a = 50, b = 40, r = 45
-\end_layout
-
-\begin_layout Subsubsection
-Algoritmo Incremental
-\end_layout
-
-\begin_layout Standard
-\begin_inset Graphics
-	filename Imagenes Pruebas Incremental Hull/Prueba N10000TeA50B40R45.png
-	scale 50
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename Imagenes Pruebas Incremental Hull/Prueba N10000TrA50B40R45.png
-	scale 50
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsubsection
-Algoritmo Divide y Conquista
-\end_layout
-
-\begin_layout Standard
-\begin_inset Graphics
-	filename Imagenes Pruebas DC Hull/Prueba N10000TeA50B40R45.png
-	scale 50
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename Imagenes Pruebas DC Hull/Prueba N10000TrA50B40R45.png
-	scale 50
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsubsection
-Algoritmo Jarvis - March
-\end_layout
-
-\begin_layout Standard
-\begin_inset Graphics
-	filename Imagenes Pruebas Jarvis Hull/Prueba N10000TeA50B40R45.png
-	scale 50
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename Imagenes Pruebas Jarvis Hull/Prueba N10000TrA50B40R45.png
-	scale 50
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Section

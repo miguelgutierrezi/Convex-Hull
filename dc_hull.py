@@ -11,7 +11,7 @@
 # imports
 import sys
 import Graphs
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import math
 import time
 import os
@@ -194,17 +194,22 @@ else:
     # endFor
 
     file = open("salida_dc.txt", "w")
+    for tam in range (100, 100000, 100):
+        start_time = time.time()
+        hull = DC_Hull (points)
+        final_time = time.time() - start_time
+        file.write("%d %f\n"%(tam, final_time))
+    file.close()
+
     start_time = time.time()
     hull = DC_Hull (points)
     print ("Divide and Conquer Hull gasto %s segundos"%(time.time() - start_time))
-    f.write("New file")
-    f.close()
 
     printPoints(hull)
 
     hull.append(hull[0])
     
-    x = []
+    """x = []
     y = []
 
     for p in hull:
@@ -214,5 +219,5 @@ else:
     plt.scatter(pointsX, pointsY, facecolor="black")
     plt.scatter(x, y, facecolor="green")
     plt.plot(x, y, color='g')
-    plt.show()
+    plt.show()"""
 # endIf
