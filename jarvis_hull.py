@@ -124,7 +124,7 @@ else:
     file = open("salida_jarvis.txt", "w")
     for tam in range (100, 100000, 100):
         start_time = time.time()
-        hull = incremental_Hull (points)
+        hull = jarvis_Hull (points)
         final_time = time.time() - start_time
         file.write("%d %f\n"%(tam, final_time))
     file.close()
