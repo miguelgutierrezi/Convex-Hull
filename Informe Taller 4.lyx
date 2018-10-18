@@ -105,6 +105,39 @@ El siguiente documento contiene el desarrollo de los algoritmos para calcular
 Manual del usuario
 \end_layout
 
+\begin_layout Paragraph
+Para la gráficación se hizo uso del módulo matlibplot.pyplot perteneciente
+ a Python.
+ Su instalación se realiza de la siguiente manera, en los tres casos se
+ realiza la instalación mediante la consola y en modo administrador:
+\end_layout
+
+\begin_layout Enumerate
+Para sistema operativo Windows: pip install matplotlib
+\end_layout
+
+\begin_layout Enumerate
+Para sistema operativo Mac OS: En especial necesitamos instalar primero
+ el homebrew con el siguiente comando brew install pkg-config, posteriormentem
+ se instala con el comando pip install matplotlib
+\end_layout
+
+\begin_layout Enumerate
+Para sistema operativo Debian / Ubuntu: sudo apt-get install python3-matplotlib
+\end_layout
+
+\begin_layout Enumerate
+Para sistema operativo Fedora: sudo dnf install python3-matplotlib
+\end_layout
+
+\begin_layout Enumerate
+Para sistema operativo Red Hat: sudo yum install python3-matplotlib
+\end_layout
+
+\begin_layout Enumerate
+Para sistema operativo Arch: sudo pacman -S python-matplotlib
+\end_layout
+
 \begin_layout Paragraph*
 A continuación se mostrarán los pasos para compilar los códigos de cascos
  convexos:
@@ -1466,7 +1499,8 @@ Invariante
 \end_layout
 
 \begin_layout Paragraph
-Se garantiza que 
+Se garantiza que todos los puntos analizados se encuentran dentro del casco
+ convexo.
 \end_layout
 
 \begin_layout Subsubsection
