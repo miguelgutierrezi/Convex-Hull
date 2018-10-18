@@ -105,6 +105,39 @@ El siguiente documento contiene el desarrollo de los algoritmos para calcular
 Manual del usuario
 \end_layout
 
+\begin_layout Paragraph
+Para la gráficación se hizo uso del módulo matlibplot.pyplot perteneciente
+ a Python.
+ Su instalación se realiza de la siguiente manera, en los tres casos se
+ realiza la instalación mediante la consola y en modo administrador:
+\end_layout
+
+\begin_layout Enumerate
+Para sistema operativo Windows: pip install matplotlib
+\end_layout
+
+\begin_layout Enumerate
+Para sistema operativo Mac OS: En especial necesitamos instalar primero
+ el homebrew con el siguiente comando brew install pkg-config, posteriormentem
+ se instala con el comando pip install matplotlib
+\end_layout
+
+\begin_layout Enumerate
+Para sistema operativo Debian / Ubuntu: sudo apt-get install python3-matplotlib
+\end_layout
+
+\begin_layout Enumerate
+Para sistema operativo Fedora: sudo dnf install python3-matplotlib
+\end_layout
+
+\begin_layout Enumerate
+Para sistema operativo Red Hat: sudo yum install python3-matplotlib
+\end_layout
+
+\begin_layout Enumerate
+Para sistema operativo Arch: sudo pacman -S python-matplotlib
+\end_layout
+
 \begin_layout Paragraph*
 A continuación se mostrarán los pasos para compilar los códigos de cascos
  convexos:
@@ -1466,7 +1499,8 @@ Invariante
 \end_layout
 
 \begin_layout Paragraph
-Se garantiza que 
+Se garantiza que todos los puntos analizados se encuentran dentro del casco
+ convexo.
 \end_layout
 
 \begin_layout Subsubsection
@@ -1875,6 +1909,237 @@ Para el ciclo que permite encontrar el casco convexo más pequeño, se garantiza
 
 \begin_layout Subsubsection
 Análisis de Complejidad
+\end_layout
+
+\begin_layout Paragraph
+La complejidad de este algoritmo es 
+\begin_inset Formula $O(m*n)$
+\end_inset
+
+ siendo m la cantidad de puntos del casco convexo, y, n la cantidad de puntos
+ incial de la distribución.
+ Por ende se necesita 
+\begin_inset Formula $O(m)$
+\end_inset
+
+ para el recorrido del casco convexo, y, 
+\begin_inset Formula $O(n)$
+\end_inset
+
+ para recorrer el conjunto de puntos.
+\end_layout
+
+\begin_layout Section
+Pruebas
+\end_layout
+
+\begin_layout Paragraph
+Se realizaron tres pruebas con cada algoritmo, a continuación se presentarán
+ las gráficas generadas por cada uno de ellos.
+\end_layout
+
+\begin_layout Subsection
+Prueba 1.
+ n = 100, a = 20, b = 10, r = 30
+\end_layout
+
+\begin_layout Subsubsection
+Algoritmo Incremental
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Imagenes Pruebas Incremental Hull/Prueba N100TeA20B10R30.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename Imagenes Pruebas Incremental Hull/Prueba N100TrA20B10R30.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Algoritmo Divide y Conquista
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Imagenes Pruebas DC Hull/Prueba N100TeA20B10R30.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename Imagenes Pruebas DC Hull/Prueba N100TrA20B10R30.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Algoritmo Jarvis - March
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Imagenes Pruebas Jarvis Hull/Prueba N100TeA20B10R30.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename Imagenes Pruebas Jarvis Hull/Prueba N100TrA20B10R30.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Prueba 1.
+ n = 1000, a = 50, b = 40, r = 0
+\end_layout
+
+\begin_layout Subsubsection
+Algoritmo Incremental
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Imagenes Pruebas Incremental Hull/Prueba N1000TeA50B40R0.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename Imagenes Pruebas Incremental Hull/Prueba N1000TrA50B40R0.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Algoritmo Divide y Conquista
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Imagenes Pruebas DC Hull/Prueba N1000TeA50B40R0.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename Imagenes Pruebas DC Hull/Prueba N1000TrA50B40R0.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Algoritmo Jarvis - March
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Imagenes Pruebas Jarvis Hull/Prueba N1000TeA50B40R0.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename Imagenes Pruebas Jarvis Hull/Prueba N1000TrA50B40R0.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Prueba 1.
+ n = 10000, a = 50, b = 40, r = 45
+\end_layout
+
+\begin_layout Subsubsection
+Algoritmo Incremental
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Imagenes Pruebas Incremental Hull/Prueba N10000TeA50B40R45.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename Imagenes Pruebas Incremental Hull/Prueba N10000TrA50B40R45.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Algoritmo Divide y Conquista
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Imagenes Pruebas DC Hull/Prueba N10000TeA50B40R45.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename Imagenes Pruebas DC Hull/Prueba N10000TrA50B40R45.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Algoritmo Jarvis - March
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Imagenes Pruebas Jarvis Hull/Prueba N10000TeA50B40R45.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename Imagenes Pruebas Jarvis Hull/Prueba N10000TrA50B40R45.png
+	scale 50
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section

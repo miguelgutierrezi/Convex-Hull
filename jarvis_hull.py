@@ -126,7 +126,7 @@ else:
         start_time = time.time()
         hull = jarvis_Hull (points)
         final_time = time.time() - start_time
-        file.write("%d %f\n"%(tam, final_time))
+        file.write("%d,%f\n"%(tam, final_time))
     file.close()
     
     start_time = time.time()

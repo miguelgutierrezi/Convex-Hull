@@ -118,7 +118,7 @@ Para sistema operativo Windows: pip install matplotlib
 
 \begin_layout Enumerate
 Para sistema operativo Mac OS: En especial necesitamos instalar primero
- el homebrew con el siguiente comando brew install pkg-config, posteriormentem
+ el homebrew con el siguiente comando brew install pkg-config, posteriormente
  se instala con el comando pip install matplotlib
 \end_layout
 
