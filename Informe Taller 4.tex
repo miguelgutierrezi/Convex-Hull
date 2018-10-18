@@ -1,0 +1,439 @@
+%% LyX 2.3.0 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english]{article}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{geometry}
+\geometry{verbose,tmargin=1.5cm,bmargin=1.5cm,lmargin=1cm,rmargin=1cm}
+\usepackage{float}
+\usepackage{amssymb}
+\usepackage{graphicx}
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+\newcommand{\noun}[1]{\textsc{#1}}
+\floatstyle{ruled}
+\newfloat{algorithm}{tbp}{loa}
+\providecommand{\algorithmname}{Algorithm}
+\floatname{algorithm}{\protect\algorithmname}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usepackage{algorithm, algpseudocode}
+
+\makeatother
+
+\usepackage{babel}
+\begin{document}
+
+\title{Taller 4: Geometría Computacional: Cascos Convexos}
+
+\author{Miguel Ángel Gutiérrez Ibagué - Juan Sebastián Bastos Cruz}
+\maketitle
+\begin{abstract}
+El siguiente documento contiene el desarrollo de los algoritmos para
+calcular cascos convexos de manera diferente. En primer lugar encontramos
+el algoritmo incremental, en segundo lugar el algoritmo basado en
+la técnica de dividir y vencer, y, finalmente el algoritmo conocido
+como Jarvis - March, o de Wrapping.
+\end{abstract}
+
+\section*{Manual del usuario}
+
+\paragraph{Para la gráficación se hizo uso del módulo matlibplot.pyplot perteneciente
+a Python. Su instalación se realiza de la siguiente manera, en los
+tres casos se realiza la instalación mediante la consola y en modo
+administrador:}
+\begin{enumerate}
+\item Para sistema operativo Windows: pip install matplotlib
+\item Para sistema operativo Mac OS: En especial necesitamos instalar primero
+el homebrew con el siguiente comando brew install pkg-config, posteriormente
+se instala con el comando pip install matplotlib
+\item Para sistema operativo Debian / Ubuntu: sudo apt-get install python3-matplotlib
+\item Para sistema operativo Fedora: sudo dnf install python3-matplotlib
+\item Para sistema operativo Red Hat: sudo yum install python3-matplotlib
+\item Para sistema operativo Arch: sudo pacman -S python-matplotlib
+\end{enumerate}
+
+\paragraph*{A continuación se mostrarán los pasos para compilar los códigos de
+cascos convexos:}
+
+Inicialmente debemos hacer claridad en que los párametros usados por
+los 3 algoritmos son los siguientes:
+
+- n: Cantidad de puntos a generar
+
+- t: Tipo de distribución, 'e' para una distribución elíptica, y 'r'
+para una distribución rectangular.
+
+- a: En un rectángulo representa el tamaño, y en una elipse representa
+el diámetro.
+
+- b: Representa la altura,
+
+- r: Representa el ángulo de inclinación.
+\begin{enumerate}
+\item Para el algoritmo de metodología incremental se ejecutará de la siguiente
+manera: python \noun{incremental\_hull.py n t a b r}
+\item Para el algoritmo de metodología dividir y vencer se ejecutará de
+la siguiente manera: python \noun{dc\_hull.py n t a b r}
+\item Para el algoritmo de Jarvis - March se ejecutará de la siguiente manera:
+python \noun{jarvis\_hull.py n t a b r}
+\end{enumerate}
+
+\section{Formalización del problema}
+
+\paragraph*{Dado un conjunto $\beta$ de n puntos diferentes repartidos en una
+distribución elíptica o rectangular. Se espera retornar el casco convexo
+más pequeño que pueda contener todos los puntos contenidos en el conjunto
+$\beta$.}
+
+\section{Formalización del algoritmo:}
+
+\subsection{Entradas:}
+
+\subparagraph*{- Un conjunto $\beta$ de n puntos distintos repartidos en una distribución
+elíptica o rectangular definida de la siguiente manera: }
+
+$\beta=\left\langle \left(s_{i},s_{j}\right):i\in\left\{ 1..n\right\} \land j\in\left\{ 1..n\right\} \subset\mathbb{\mathbb{R}}\right\rangle $
+
+\subparagraph*{- Un cáracter t que indica la distribución elíptica o rectangular
+que se utilizará. }
+
+\subparagraph*{- Un entero n que contiene la cantidad de puntos que se encontrarán
+dentro la distribución.}
+
+\subparagraph*{- Un entero a que indica el tamaño del rectángulo, o, el diámetro
+de la elipse.}
+
+\subparagraph*{- Un entero b que indica la altura de la distribución.}
+
+\subparagraph*{- Un entero r que indica el grado de inclinación de la figura.}
+
+\subsection{Salidas:}
+
+\paragraph{El conjunto $\gamma$ que representa el Casco Convexo más pequeño
+de m puntos diferentes que contenga el conjunto $\beta$ de puntos
+enunciado en las entradas.}
+
+$\gamma=\left\langle \left(s_{i},s_{j}\right):i\in\left\{ 1..n\right\} \land j\in\left\{ 1..n\right\} \subset\mathbb{\mathbb{R}}\right\rangle |\beta\subseteq\gamma$
+
+\section{Observaciones}
+\begin{itemize}
+\item Cuando $n<3$ implica que no existe ningún casco convexo, esto debido
+a que no hay puntos suficientes que permitan generar un polígono que
+cumpla con las condiciones de un caso convexo.
+\item Cuando $n\geq3$ existe un casco convexo y puede hallarse utilizando
+cualquiera de los algoritmos mencionados previamente.
+\end{itemize}
+
+\section{Escritura del algoritmo}
+
+\subsection{Algoritmo Incremental}
+
+\subsubsection{Pseudocódigo}
+
+\begin{algorithm}[tbh]
+\caption{Incremental Hull}
+
+\begin{algorithmic}[1]
+\Procedure{pointsRightTurn}{p1, p2, p3}
+\State x1 $\leftarrow$ p1.x $-$ p2.x
+\State x2 $\leftarrow$ p1.x $-$ p3.x
+\State y1 $\leftarrow$ p1.y $-$ p2.y
+\State y2 $\leftarrow$ p1.y $-$ p3.y
+\State total $\leftarrow$ y2 $*$ x1 $-$ y1 $*$ x2
+\State \textbf{return} total
+\EndProcedure
+\end{algorithmic}
+
+\begin{algorithmic}[1]
+\Procedure{incrementalHull}{Points}
+\State Points $\leftarrow$ sortByXAxis(Points)
+\State Lupper = []
+\State Lupper.append(Points[1])
+\State Lupper.append(Points[2])
+\For {i $\leftarrow 3$ $\textbf(to)$ $|$Points$|$}
+\State Lupper.append(Points[i])
+\While {|Lupper|$>$2 and pointsRightTurn(Lupper[|Lupper|-2],Lupper[|Lupper|-1],Lupper[|Lupper|])}
+\State Lupper.pop(|Lupper|-1)
+\EndWhile
+\EndFor
+\State Llower = []
+\State Llower.append(|Points|)
+\State Llower.append(|Points|-1)
+\For {i $\leftarrow |Points|$ $downto$ 1}
+\State Llower.append(Points[i])
+\While {|Llower|$>$2 and pointsRightTurn(Llower[|Llower|-2],Llower[|Llower|-1],Llower[|Llower|])}
+\State Llower.pop(|Llower|-1)
+\EndWhile
+\EndFor
+\State Llower.pop(0)
+\State Llower.pop(|Llower|)
+\State hull $\leftarrow$ Llower $+$ Lupper
+\State \textbf{return} hull
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
+\subsubsection{Invariante}
+
+\paragraph*{La invariante es que se toman puntos mínimos por su coordenada en
+izquierda o derecha que se encuentra dentro del casco.}
+
+\subsubsection{Análisis de Complejidad}
+
+\paragraph{La complejidad es $O(n^{2})$ dado que es necesario recorrer todos
+los puntos existentes, y, a su vez se requiere verificar que elementos
+deben eliminarse o añadirse al casco.}
+
+\subsection{Algoritmo Divide y Conquista}
+
+\subsubsection{Pseudocódigo}
+
+\begin{algorithm}[tbh]
+\caption{DC Hull}
+
+\begin{algorithmic}[1]
+\Procedure{DCHull}{Points}
+\State (minimum, maximum) $\leftarrow$ extremePoints(Points)
+\State hull $\leftarrow$ subHull(minimum, maximum, points)
+\State hull $\leftarrow$ hull $+$ subHull(maximum, minimum, points)
+\State \textbf{return} hull
+\EndProcedure
+\end{algorithmic}
+
+\begin{algorithmic}[1]
+\Procedure{subHull}{a, b, S}
+\State S $\leftarrow$ leftPoints(a, b, S)
+\State c $\leftarrow$ farthestPoint(a, b, S)
+\If {c $==$ None}
+\State \textbf{return} [b]
+\EndIf
+\State hull $\leftarrow$ subHull(a, c, S)
+\State hull $\leftarrow$ hull $+$ subHull(c, b, S)
+\State \textbf{return} hull
+\EndProcedure
+\end{algorithmic}
+
+\begin{algorithmic}[1]
+\Procedure{extremePoints}{points}
+\State minimum $\leftarrow$ $\infty$
+\State maximum $\leftarrow$ $-\infty$
+\State posMax $\leftarrow$ 0
+\State posMin $\leftarrow$ 0
+\For {i $\leftarrow 1$ $\textbf(to)$ $|$Points$|$}
+\If {points[i].y $>$ maximum}
+\State maximum $\leftarrow$ points[i].y
+\State posMax $\leftarrow$ i
+\EndIf
+\If {points[i].y $<$ minimum}
+\State minimum $\leftarrow$ points[i].y
+\State posMin $\leftarrow$ i
+\EndIf
+\EndFor
+\State \textbf{return} (points[posMin], points[posMax])
+\EndProcedure
+\end{algorithmic}
+
+\begin{algorithmic}[1]
+\Procedure{leftPoints}{s, e, points}
+\State left $\leftarrow$ []
+\For {i $\leftarrow 1$ $\textbf(to)$ $|$Points$|$}
+\If {pointOp(s, e, points[i]) == 2}
+\State left.append(points[i])
+\EndIf
+\EndFor
+\State \textbf{return} left
+\EndProcedure
+\end{algorithmic}
+
+\begin{algorithmic}[1]
+\Procedure{pointOp}{p1, p2, p3}
+\State val $\leftarrow$ (p2.y $-$ p1.y) $*$ (p3.x $-$ p2.x) $-$ (p2.x $-$ p1.x) $*$ (p3.y $-$ p2.y)
+\If {val $==$ 0}
+\State \textbf{return} 0
+\ElsIf {val $>$ 0}
+\State \textbf{return} 1
+\Else
+\State \textbf{return} 2
+\EndIf
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+\begin{algorithm}[tbh]
+\caption{Algoritmos de ayuda}
+
+\begin{algorithmic}[1]
+\Procedure{farthestPoint}{s, e, points}
+\State maximum $\leftarrow$ $-\infty$
+\For {i $\leftarrow 1$ $\textbf(to)$ $|$Points$|$}
+\If {points[i] $!=$ s and points[i] $!=$ e}
+\State dist $\leftarrow$ distance(s, e, points[i])
+\If {dist $>$ maximum}
+\State maximum $\leftarrow$ dist
+\State maxP $\leftarrow$ points[i]
+\EndIf
+\EndIf
+\EndFor
+\If {maximum $!=$ $-\infty$}
+\State \textbf{return} maxP
+\Else
+\State \textbf{return} None
+\EndIf
+\EndProcedure
+\end{algorithmic}
+
+\begin{algorithmic}[1]
+\Procedure{distance}{start, end, point}
+\State nom $\leftarrow$ abs((end.y $-$ start.y) $*$ point.x $-$ (end.x $-$ start.x) $*$ point.y $+$ endx $*$ start.y $-$ end.y $*$ start.x)
+\State denom $\leftarrow$ ((end.y $-$ start.y) $**$ 2 $+$ (end.x $-$ start.x) $**$ 2) $**$ 0.5
+\State result $\leftarrow$ nom $/$ denom
+\State \textbf{return} result
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
+\subsubsection{Invariante}
+
+\paragraph{Se garantiza que todos los puntos analizados se encuentran dentro
+del casco convexo.}
+
+\subsubsection{Análisis de Complejidad}
+
+\paragraph{La complejidad del algoritmo de dividir y vencer es de $O(n\log n)$
+debido a que se requiere un tiempo $O(n)$ para realizar el merge
+de los cascos hallados por izquierda y derecha. Además, se debe tener
+en cuenta lo que se requiere para realizar la división del conjunto
+de puntos inicial.}
+
+\subsection{Algoritmo Jarvis - March}
+
+\subsubsection{Pseudocódigo}
+
+\begin{algorithm}[tbh]
+\caption{Jarvis Hull}
+
+\begin{algorithmic}[1]
+\Procedure{jarvisHull}{Points}
+\If {|Points| $<$ 3}
+\State \textbf{return}
+\EndIf
+\State hull $\leftarrow$ []
+\State left $\leftarrow$ 0
+\For {i $\leftarrow 2$ $\textbf(to)$ $|$Points$|$}
+\If {points[i].x $<$ points[left].x}
+\State left $\leftarrow$ i
+\EndIf
+\EndFor
+\State start $\leftarrow$ left
+\While {true}
+\State hull.append(points[start])
+\State q $\leftarrow$ (start $+$ 1) \% |Points|
+\For {i $\leftarrow 1$ $\textbf(to)$ |Points|}
+\If {pointOp(points[start], points[i], points[q]) $==$ 2}
+\State q $\leftarrow$ i
+\EndIf
+\EndFor
+\State start $\leftarrow$ q
+\If {start $==$ left}
+\State \textbf{break}
+\EndIf
+\EndWhile
+\State \textbf{return} hull
+\EndProcedure
+\end{algorithmic}
+
+\begin{algorithmic}[1]
+\Procedure{pointOp}{p1, p2, p3}
+\State val $\leftarrow$ (p2.y $-$ p1.y) $*$ (p3.x $-$ p2.x) $-$ (p2.x $-$ p1.x) $*$ (p3.y $-$ p2.y)
+\If {val $==$ 0}
+\State \textbf{return} 0
+\ElsIf {val $>$ 0}
+\State \textbf{return} 1
+\Else
+\State \textbf{return} 2
+\EndIf
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+
+\subsubsection{Invariante}
+
+\paragraph*{Para el ciclo que permite encontrar el casco convexo más pequeño,
+se garantiza que se temrinará en el momento en el que se vuelva al
+punto de inicio. Además, al recorrer todo el conjunto de puntos, se
+garantiza que ninguno quedará fuera del análisis para el casco.}
+
+\subsubsection{Análisis de Complejidad}
+
+\paragraph{La complejidad de este algoritmo es $O(m*n)$ siendo m la cantidad
+de puntos del casco convexo, y, n la cantidad de puntos incial de
+la distribución. Por ende se necesita $O(m)$ para el recorrido del
+casco convexo, y, $O(n)$ para recorrer el conjunto de puntos.}
+
+\section{Pruebas}
+
+\paragraph{Se realizaron tres pruebas con cada algoritmo, a continuación se
+presentarán las gráficas generadas por cada uno de ellos.}
+
+\subsection{Prueba 1. n = 100, a = 20, b = 10, r = 30}
+
+\subsubsection{Algoritmo Incremental}
+
+\includegraphics[scale=0.5]{\string"Imagenes Pruebas Incremental Hull/Prueba N100TeA20B10R30\string".png}\includegraphics[scale=0.5]{\string"Imagenes Pruebas Incremental Hull/Prueba N100TrA20B10R30\string".png}
+
+\subsubsection{Algoritmo Divide y Conquista}
+
+\includegraphics[scale=0.5]{\string"Imagenes Pruebas DC Hull/Prueba N100TeA20B10R30\string".png}\includegraphics[scale=0.5]{\string"Imagenes Pruebas DC Hull/Prueba N100TrA20B10R30\string".png}
+
+\subsubsection{Algoritmo Jarvis - March}
+
+\includegraphics[scale=0.5]{\string"Imagenes Pruebas Jarvis Hull/Prueba N100TeA20B10R30\string".png}\includegraphics[scale=0.5]{\string"Imagenes Pruebas Jarvis Hull/Prueba N100TrA20B10R30\string".png}
+
+\subsection{Prueba 1. n = 1000, a = 50, b = 40, r = 0}
+
+\subsubsection{Algoritmo Incremental}
+
+\includegraphics[scale=0.5]{\string"Imagenes Pruebas Incremental Hull/Prueba N1000TeA50B40R0\string".png}\includegraphics[scale=0.5]{\string"Imagenes Pruebas Incremental Hull/Prueba N1000TrA50B40R0\string".png}
+
+\subsubsection{Algoritmo Divide y Conquista}
+
+\includegraphics[scale=0.5]{\string"Imagenes Pruebas DC Hull/Prueba N1000TeA50B40R0\string".png}\includegraphics[scale=0.5]{\string"Imagenes Pruebas DC Hull/Prueba N1000TrA50B40R0\string".png}
+
+\subsubsection{Algoritmo Jarvis - March}
+
+\includegraphics[scale=0.5]{\string"Imagenes Pruebas Jarvis Hull/Prueba N1000TeA50B40R0\string".png}\includegraphics[scale=0.5]{\string"Imagenes Pruebas Jarvis Hull/Prueba N1000TrA50B40R0\string".png}
+
+\subsection{Prueba 1. n = 10000, a = 50, b = 40, r = 45}
+
+\subsubsection{Algoritmo Incremental}
+
+\includegraphics[scale=0.5]{\string"Imagenes Pruebas Incremental Hull/Prueba N10000TeA50B40R45\string".png}\includegraphics[scale=0.5]{\string"Imagenes Pruebas Incremental Hull/Prueba N10000TrA50B40R45\string".png}
+
+\subsubsection{Algoritmo Divide y Conquista}
+
+\includegraphics[scale=0.5]{\string"Imagenes Pruebas DC Hull/Prueba N10000TeA50B40R45\string".png}\includegraphics[scale=0.5]{\string"Imagenes Pruebas DC Hull/Prueba N10000TrA50B40R45\string".png}
+
+\subsubsection{Algoritmo Jarvis - March}
+
+\includegraphics[scale=0.5]{\string"Imagenes Pruebas Jarvis Hull/Prueba N10000TeA50B40R45\string".png}\includegraphics[scale=0.5]{\string"Imagenes Pruebas Jarvis Hull/Prueba N10000TrA50B40R45\string".png}
+
+\section{Análisis de resultados}
+\begin{itemize}
+\item En este caso particular, se obtiene una complejidad de $O(n^{2})$
+tanto para el algoritmo de memoización como de Bottom-up. Sin embargo,
+por cuestión de optimización de recursos, es preferible el uso del
+código Bottom-up, puesto que, hace un menor uso de memoria, dado que
+su funcionamiento de basa en el uso de accesos a la tabla. Y, por
+lo tanto, se genera una mayor eficiencia en la ejecución del algoritmo.
+\item Se verifica que el código realizado en Programación Dinámica es más
+eficiente que el código de fuerza bruta y memoizado. Esto se comprueba
+a partir de las pruebas realizadas y la obtención de mejores tiempos
+y resultados en la ejecución del código.
+\end{itemize}
+
+\end{document}
