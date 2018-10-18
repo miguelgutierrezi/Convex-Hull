@@ -106,6 +106,10 @@ Manual del usuario
 \end_layout
 
 \begin_layout Paragraph*
+Para las gráficas se uso el modulo matlibplot.pyplot
+\end_layout
+
+\begin_layout Paragraph*
 A continuación se mostrarán los pasos para compilar los códigos de cascos
  convexos:
 \end_layout
@@ -1937,12 +1941,170 @@ Algoritmo Divide y Conquista
 \begin_layout Standard
 \begin_inset Graphics
 	filename Imagenes Pruebas DC Hull/Prueba N100TeA20B10R30.png
+	scale 50
 
 \end_inset
 
 
 \begin_inset Graphics
-	filename Imagenes Pruebas DC Hull/Prueba N100TeA20B10R30.png
+	filename Imagenes Pruebas DC Hull/Prueba N100TrA20B10R30.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Algoritmo Jarvis - March
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Imagenes Pruebas Jarvis Hull/Prueba N100TeA20B10R30.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename Imagenes Pruebas Jarvis Hull/Prueba N100TrA20B10R30.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Prueba 1.
+ n = 1000, a = 50, b = 40, r = 0
+\end_layout
+
+\begin_layout Subsubsection
+Algoritmo Incremental
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Imagenes Pruebas Incremental Hull/Prueba N1000TeA50B40R0.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename Imagenes Pruebas Incremental Hull/Prueba N1000TrA50B40R0.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Algoritmo Divide y Conquista
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Imagenes Pruebas DC Hull/Prueba N1000TeA50B40R0.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename Imagenes Pruebas DC Hull/Prueba N1000TrA50B40R0.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Algoritmo Jarvis - March
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Imagenes Pruebas Jarvis Hull/Prueba N1000TeA50B40R0.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename Imagenes Pruebas Jarvis Hull/Prueba N1000TrA50B40R0.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Prueba 1.
+ n = 10000, a = 50, b = 40, r = 45
+\end_layout
+
+\begin_layout Subsubsection
+Algoritmo Incremental
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Imagenes Pruebas Incremental Hull/Prueba N10000TeA50B40R45.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename Imagenes Pruebas Incremental Hull/Prueba N10000TrA50B40R45.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Algoritmo Divide y Conquista
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Imagenes Pruebas DC Hull/Prueba N10000TeA50B40R45.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename Imagenes Pruebas DC Hull/Prueba N10000TrA50B40R45.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Algoritmo Jarvis - March
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename Imagenes Pruebas Jarvis Hull/Prueba N10000TeA50B40R45.png
+	scale 50
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename Imagenes Pruebas Jarvis Hull/Prueba N10000TrA50B40R45.png
 	scale 50
 
 \end_inset
